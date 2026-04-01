@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Beaumont Motor Division</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0f0f0d;--bg2:#1a1a16;--bg3:#222220;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text:#e8e6de;--text2:#8a8880;--text3:#5a5855;--accent:#c8a84b;--accent2:#a08535;--danger:#c85c45;--success:#5a9e6f;--warn:#c87d3a;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--radius:8px;--radius-lg:12px;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
+.header{border-bottom:1px solid var(--border);padding:0.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.header-title{font-family:var(--mono);font-size:17px;font-weight:500;color:var(--accent);letter-spacing:0.06em;}
+.header-sub{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:8px;}
+.build-name{font-size:12px;color:var(--text2);font-family:var(--mono);text-align:right;}
+.settings-btn{background:transparent;border:1px solid var(--border2);border-radius:var(--radius);padding:5px 9px;color:var(--text2);cursor:pointer;font-size:14px;transition:all 0.15s;}
+.settings-btn:hover{border-color:var(--accent);color:var(--accent);}
+.tabs{display:flex;border-bottom:1px solid var(--border);padding:0 1.25rem;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:9px 13px;font-size:12px;background:none;border:none;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color 0.15s;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab:hover:not(.active){color:var(--text);}
+.section{display:none;padding:1.1rem 1.25rem;padding-bottom:90px;}
+.section.active{display:block;}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:7px;margin-bottom:1.1rem;}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:9px 11px;}
+.metric-label{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.05em;}
+.metric-value{font-size:19px;font-weight:600;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:10px;}
+.card-title{font-size:13px;font-weight:500;margin-bottom:10px;}
+.row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:7px;}
+.row:last-child{margin-bottom:0;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--font);font-size:12px;padding:7px 10px;outline:none;transition:border-color 0.15s;flex:1;min-width:90px;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent2);}
+input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(0.5);}
+select option{background:var(--bg3);}
+textarea{min-height:52px;resize:vertical;}
+.btn{padding:6px 13px;font-size:12px;font-family:var(--font);border-radius:var(--radius);cursor:pointer;white-space:nowrap;transition:all 0.12s;border:1px solid var(--border2);background:transparent;color:var(--text);}
+.btn:hover{background:var(--bg3);}
+.btn-primary{background:var(--accent);color:#0f0f0d;border-color:var(--accent);font-weight:500;}
+.btn-primary:hover{background:#d4b455;}
+.btn-sm{padding:3px 9px;font-size:11px;}
+.btn-danger{color:var(--danger);border-color:transparent;}
+.btn-danger:hover{background:rgba(200,92,69,0.12);}
+.btn-ghost{border-color:transparent;color:var(--text2);}
+.btn-ghost:hover{background:var(--bg3);color:var(--text);}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap;font-family:var(--mono);}
+.badge-received{background:rgba(90,158,111,0.15);color:#6ab880;border:1px solid rgba(90,158,111,0.22);}
+.badge-away{background:rgba(200,125,58,0.18);color:#d48a50;border:1px solid rgba(200,125,58,0.25);}
+.badge-urgent{background:rgba(200,92,69,0.18);color:#e07060;border:1px solid rgba(200,92,69,0.25);}
+.badge-noted{background:rgba(90,88,85,0.25);color:var(--text3);border:1px solid var(--border);}
+.badge-actioned{background:rgba(90,158,111,0.15);color:#6ab880;border:1px solid rgba(90,158,111,0.22);}
+.badge-pending{background:rgba(74,130,184,0.15);color:#70a8d8;border:1px solid rgba(74,130,184,0.22);}
+.badge-accepted{background:rgba(90,158,111,0.15);color:#6ab880;border:1px solid rgba(90,158,111,0.22);}
+.badge-rejected{background:rgba(200,92,69,0.18);color:#e07060;border:1px solid rgba(200,92,69,0.25);}
+.empty{text-align:center;padding:2rem 1rem;color:var(--text3);font-family:var(--mono);font-size:12px;}
+.field-label{font-size:11px;color:var(--text3);white-space:nowrap;font-family:var(--mono);}
+.section-divider{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;font-family:var(--mono);margin:1rem 0 7px;}
+.ov-bar-track{flex:1;height:9px;background:var(--bg3);border-radius:5px;overflow:hidden;}
+.ov-bar-fill{height:100%;border-radius:5px;background:var(--accent);transition:width 0.5s;}
+.phase-list{margin-bottom:1.1rem;}
+.phase-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.phase-row:last-child{border-bottom:none;}
+.phase-num{width:21px;height:21px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;font-family:var(--mono);}
+.phase-num.active{background:var(--accent);color:#0f0f0d;}
+.phase-num.done{background:var(--success);color:#0f0f0d;}
+.phase-info{flex:1;}
+.phase-name{font-size:12px;font-weight:500;}
+.phase-comps{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.phase-bar-track{width:55px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;flex-shrink:0;}
+.phase-bar-fill{height:100%;border-radius:2px;}
+.phase-pct{font-size:11px;color:var(--text3);min-width:26px;text-align:right;font-family:var(--mono);}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;}
+.comp-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:9px 11px;cursor:pointer;transition:border-color 0.15s;}
+.comp-card:hover{border-color:var(--border2);}
+.comp-card.active-phase{border-color:var(--accent);}
+.comp-card-name{font-size:12px;font-weight:500;margin-bottom:3px;}
+.comp-card-meta{font-size:10px;color:var(--text3);margin-bottom:5px;font-family:var(--mono);}
+.comp-bar-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.comp-bar-fill{height:100%;border-radius:2px;}
+.seg{display:flex;gap:3px;background:var(--bg3);border-radius:var(--radius-lg);padding:3px;margin-bottom:1rem;}
+.seg-btn{flex:1;padding:6px 8px;font-size:12px;border:none;background:transparent;color:var(--text3);cursor:pointer;border-radius:var(--radius);transition:all 0.15s;text-align:center;}
+.seg-btn.active{background:var(--bg2);color:var(--text);font-weight:500;border:1px solid var(--border2);}
+.comp-pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem;}
+.pill{padding:4px 10px;font-size:11px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text3);cursor:pointer;transition:all 0.12s;white-space:nowrap;font-family:var(--mono);}
+.pill.active{background:var(--accent);color:#0f0f0d;border-color:var(--accent);}
+.comp-section{margin-bottom:1.4rem;}
+.comp-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.comp-header-name{font-size:13px;font-weight:500;flex:1;}
+.comp-header-bar{width:55px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.comp-header-bar-fill{height:100%;border-radius:2px;}
+.comp-header-meta{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.job-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:4px;}
+.job-item.inspect-job{border-color:rgba(200,168,75,0.25);background:rgba(200,168,75,0.04);}
+.job-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.job-check.checked{background:var(--success);border-color:var(--success);}
+.job-check.checked::after{content:'';display:block;width:4px;height:6px;border:1.5px solid #0f0f0d;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);}
+.job-check.partial{background:var(--warn);border-color:var(--warn);}
+.job-body{flex:1;min-width:0;}
+.job-title{font-size:12px;font-weight:500;}
+.job-title.done{text-decoration:line-through;opacity:0.35;}
+.weight-badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:10px;font-family:var(--mono);font-weight:500;margin-left:5px;vertical-align:middle;}
+.weight-minor{background:rgba(90,88,85,0.2);color:var(--text3);}
+.weight-medium{background:rgba(74,130,184,0.15);color:#70a8d8;}
+.weight-major{background:rgba(200,125,58,0.18);color:#d48a50;}
+.weight-huge{background:rgba(200,92,69,0.18);color:#e07060;}
+.job-note{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px;padding-top:3px;border-top:1px solid var(--border);display:none;}
+.job-note.visible{display:block;}
+.note-toggle{font-size:10px;color:var(--text3);cursor:pointer;background:none;border:none;padding:0;font-family:var(--mono);margin-top:2px;}
+.note-toggle:hover{color:var(--text2);}
+.note-edit{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:10px;padding:4px 7px;outline:none;margin-top:3px;resize:none;min-height:40px;}
+
+.job-actions{display:flex;gap:3px;align-items:center;flex-shrink:0;}
+.expand-btn{font-size:10px;padding:2px 9px;border:1px solid rgba(200,168,75,0.3);border-radius:20px;background:transparent;color:var(--accent);cursor:pointer;font-family:var(--mono);}
+.add-job-row{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap;}
+.inspect-panel{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:12px;margin-bottom:4px;}
+.inspect-panel-title{font-size:12px;font-weight:500;margin-bottom:10px;color:var(--accent);}
+.sub-comp-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.sub-comp-btn{padding:4px 10px;font-size:11px;border:1px solid var(--border2);border-radius:20px;background:transparent;color:var(--text2);cursor:pointer;font-family:var(--mono);transition:all 0.12s;}
+.sub-comp-btn.active{background:var(--bg2);color:var(--text);border-color:var(--accent);}
+.sub-comp-btn.complete{border-color:var(--success);color:var(--success);}
+.measure-row{display:grid;grid-template-columns:1fr 90px 75px 16px;gap:5px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
+.measure-row:last-child{border-bottom:none;}
+.measure-row.header-row{font-size:10px;color:var(--text3);font-family:var(--mono);padding-bottom:7px;}
+.measure-label{font-size:11px;}
+.spec-val{font-size:10px;color:var(--text3);text-align:center;font-family:var(--mono);}
+.measure-input{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:11px;padding:4px 6px;text-align:center;outline:none;width:100%;}
+.measure-input.ok{border-color:var(--success);background:rgba(90,158,111,0.12);color:#6ab880;}
+.measure-input.warn{border-color:var(--warn);background:rgba(200,125,58,0.12);color:#d48a50;}
+.measure-input.over{border-color:var(--danger);background:rgba(200,92,69,0.12);color:#e07060;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);}
+.status-dot.ok{background:var(--success);}
+.status-dot.warn{background:var(--warn);}
+.status-dot.over{background:var(--danger);}
+.item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 12px;margin-bottom:7px;}
+.item-title{font-size:12px;font-weight:500;flex:1;}
+.item-sub{font-size:10px;color:var(--text3);margin-top:2px;font-family:var(--mono);}
+.done-item{opacity:0.4;}
+.done-item .item-title{text-decoration:line-through;}
+/* ORDERS PIPELINE */
+.pipeline{display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem;}
+.pipeline-col{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px;}
+.pipeline-col-title{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.pipeline-col-count{background:var(--bg3);border-radius:10px;padding:1px 6px;font-size:10px;}
+.pipeline-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:8px 9px;margin-bottom:5px;cursor:pointer;transition:border-color 0.15s;}
+.pipeline-item:hover{border-color:var(--border2);}
+.pipeline-item-name{font-size:12px;font-weight:500;margin-bottom:2px;}
+.pipeline-item-meta{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.pipeline-item-actions{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
+.quick-item{display:flex;align-items:center;gap:7px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:4px;}
+.quick-item-info{flex:1;min-width:0;}
+.quick-item-name{font-size:12px;font-weight:500;}
+.quick-item-meta{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:1px;}
+.insp-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:11px 12px;margin-bottom:7px;}
+.insp-item.urgent{border-left:3px solid var(--danger);border-radius:0 var(--radius-lg) var(--radius-lg) 0;}
+.insp-item.actioned{opacity:0.35;}
+.filter-bar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem;}
+.filter-btn{padding:3px 10px;font-size:11px;font-family:var(--mono);border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text3);cursor:pointer;transition:all 0.12s;}
+.filter-btn.active{background:var(--accent);color:#0f0f0d;border-color:var(--accent);}
+.fab{position:fixed;bottom:20px;right:16px;width:48px;height:48px;border-radius:50%;background:var(--accent);color:#0f0f0d;border:none;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;font-weight:300;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:flex-end;justify-content:center;}
+.overlay.visible{display:flex;}
+.modal{background:var(--bg2);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:1.25rem 1.5rem;width:100%;max-width:520px;border-top:1px solid var(--border2);max-height:85vh;overflow-y:auto;}
+.modal-title{font-size:13px;font-weight:500;margin-bottom:12px;}
+.modal input,.modal textarea{width:100%;margin-bottom:8px;flex:none;}
+.modal select{width:100%;margin-bottom:8px;flex:none;}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+/* PARTS LOOKUP */
+.parts-lookup{background:var(--bg2);border:1px solid rgba(200,168,75,0.2);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:10px;}
+.parts-lookup-title{font-size:12px;font-weight:500;color:var(--accent);margin-bottom:8px;}
+.parts-result{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:10px;margin-top:8px;font-size:12px;line-height:1.6;}
+.parts-result-row{display:flex;gap:8px;margin-bottom:4px;}
+.parts-result-label{color:var(--text3);font-family:var(--mono);font-size:10px;min-width:80px;}
+.parts-result a{color:var(--accent);text-decoration:none;}
+/* WIZARD */
+.wizard-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;overflow-y:auto;padding:2rem 1.5rem;}
+.wizard-screen.visible{display:block;}
+.wizard-inner{max-width:480px;margin:0 auto;}
+.wizard-logo{font-family:var(--mono);font-size:17px;font-weight:500;color:var(--accent);letter-spacing:0.06em;margin-bottom:4px;}
+.wizard-tagline{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:2rem;}
+.wizard-step{display:none;}
+.wizard-step.active{display:block;}
+.wizard-step-label{font-size:10px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.wizard-step-title{font-size:19px;font-weight:500;margin-bottom:1.25rem;}
+.progress-dots{display:flex;gap:5px;margin-bottom:1.75rem;}
+.progress-dot{width:6px;height:6px;border-radius:50%;background:var(--bg3);transition:background 0.2s;}
+.progress-dot.done{background:var(--accent);}
+.wiz-options{display:flex;flex-direction:column;gap:7px;margin-bottom:1.25rem;}
+.wiz-option{padding:11px 13px;border:1px solid var(--border);border-radius:var(--radius-lg);cursor:pointer;transition:all 0.12s;background:var(--bg2);font-size:13px;text-align:left;color:var(--text);}
+.wiz-option:hover{border-color:var(--border2);}
+.wiz-option.selected{border-color:var(--accent);border-width:2px;}
+.wiz-option-sub{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--mono);}
+.wiz-option.custom-opt{border-style:dashed;}
+.custom-input-wrap{display:none;padding:10px 12px;background:var(--bg3);border-radius:var(--radius);margin-top:-3px;margin-bottom:7px;}
+.custom-input-wrap.visible{display:block;}
+.custom-input-wrap input{margin-bottom:0;}
+.wiz-nav{display:flex;gap:10px;align-items:center;}
+.wiz-field{margin-bottom:11px;}
+.wiz-field label{display:block;font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;}
+.wiz-field input{width:100%;}
+.wiz-summary-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;gap:10px;}
+.wiz-summary-row:last-child{border-bottom:none;}
+.wiz-summary-label{color:var(--text3);}
+.wiz-summary-value{font-weight:500;text-align:right;}
+/* SETTINGS */
+.settings-panel{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:300;align-items:flex-start;justify-content:flex-end;}
+.settings-panel.visible{display:flex;}
+.settings-inner{background:var(--bg2);width:100%;max-width:340px;height:100%;overflow-y:auto;padding:1.5rem;border-left:1px solid var(--border2);}
+.settings-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.settings-title{font-size:14px;font-weight:500;}
+.settings-section{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);margin:1.1rem 0 7px;}
+.settings-field{margin-bottom:9px;}
+.settings-field label{display:block;font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;}
+.settings-field input,.settings-field select{width:100%;}
+@media(max-width:480px){.header,.section{padding:1rem;}.tabs{padding:0 1rem;}.pipeline{grid-template-columns:1fr;}}
+
+/* Measurement sheet */
+.msheet-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px;overflow:hidden;}
+.msheet-section-header{padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;}
+.msheet-section-title{font-size:13px;font-weight:600;}
+.msheet-section-status{font-size:10px;font-family:var(--mono);color:var(--text3);}
+.msheet-section-status.done{color:var(--success);}
+.msheet-complete-badge{font-size:10px;font-family:var(--mono);color:var(--success);}
+
+/* Spec reference box — no colour, clean */
+.mspec-box{margin:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:10px 12px;}
+.mspec-box-title{font-size:9px;font-weight:500;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;}
+.mspec-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.mspec-item{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;}
+.mspec-item-label{font-size:9px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:1px;}
+.mspec-item-val{font-size:11px;font-family:var(--mono);color:var(--text);}
+
+/* Group */
+.mgroup{padding:10px 14px 6px;border-top:1px solid var(--border);}
+.mgroup-title{font-size:13px;font-weight:600;color:var(--text);font-family:var(--font);margin-bottom:8px;}
+
+/* Colour size reference strip under group heading */
+.mgroup-size-strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.mstrip-item{display:flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);padding:3px 8px;border-radius:20px;}
+.mstrip-item.std{background:rgba(90,158,111,0.15);color:#6ab880;border:1px solid rgba(90,158,111,0.3);}
+.mstrip-item.us1{background:rgba(220,200,50,0.15);color:#c8b800;border:1px solid rgba(220,200,50,0.35);}
+.mstrip-item.us2{background:rgba(220,130,40,0.15);color:#d07020;border:1px solid rgba(220,130,40,0.35);}
+.mstrip-item.oor{background:rgba(200,92,69,0.12);color:#e07060;border:1px solid rgba(200,92,69,0.3);}
+
+/* Measurement rows */
+.mfield-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);}
+.mfield-row:last-child{border-bottom:none;}
+.mfield-label{font-size:12px;min-width:150px;flex-shrink:0;}
+.mfield-input{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:12px;padding:5px 8px;text-align:center;outline:none;width:85px;flex-shrink:0;transition:all 0.15s;}
+.mfield-input:focus{border-color:var(--accent2);}
+.mfield-input.ok{border-color:var(--success);background:rgba(90,158,111,0.12);color:#6ab880;}
+.mfield-input.us1{border-color:#a09000;background:rgba(220,200,50,0.1);color:#c8b800;}
+.mfield-input.us2{border-color:#a06000;background:rgba(220,130,40,0.1);color:#d07020;}
+.mfield-input.over{border-color:var(--danger);background:rgba(200,92,69,0.12);color:#e07060;}
+.mfield-input.locked{opacity:0.6;cursor:not-allowed;border-style:dashed;}
+.msize-badge{font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:10px;white-space:nowrap;flex-shrink:0;min-width:70px;text-align:center;}
+.msize-badge.ok{background:rgba(90,158,111,0.15);color:#6ab880;border:1px solid rgba(90,158,111,0.3);}
+.msize-badge.us1{background:rgba(220,200,50,0.15);color:#c8b800;border:1px solid rgba(220,200,50,0.35);}
+.msize-badge.us2{background:rgba(220,130,40,0.15);color:#d07020;border:1px solid rgba(220,130,40,0.35);}
+.msize-badge.over{background:rgba(200,92,69,0.15);color:#e07060;border:1px solid rgba(200,92,69,0.3);}
+.msize-badge.empty{color:var(--text3);font-size:10px;}
+.mlock-btn{font-size:14px;cursor:pointer;background:none;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text2);padding:2px 6px;flex-shrink:0;line-height:1;}
+.mlock-btn:hover{border-color:var(--accent);color:var(--accent);}
+.mlock-btn.locked{border-color:var(--accent2);color:var(--accent);}
+
+/* OOR calculation */
+.moor-row{display:flex;align-items:center;gap:8px;padding:4px 0;margin-top:2px;}
+.moor-label{font-size:10px;color:var(--text3);font-family:var(--mono);min-width:150px;flex-shrink:0;}
+.moor-val{font-size:11px;font-family:var(--mono);font-weight:500;width:85px;text-align:center;flex-shrink:0;}
+.moor-val.ok{color:var(--success);}
+.moor-val.over{color:var(--danger);}
+.moor-badge{font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:10px;}
+.moor-badge.ok{background:rgba(90,158,111,0.15);color:#6ab880;border:1px solid rgba(90,158,111,0.3);}
+.moor-badge.over{background:rgba(200,92,69,0.15);color:#e07060;border:1px solid rgba(200,92,69,0.3);}
+
+/* Bore calc section */
+.mcalc-section{padding:8px 14px;background:rgba(200,168,75,0.04);border-top:1px solid var(--border);}
+.mcalc-section-title{font-size:9px;font-weight:500;color:var(--accent);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;}
+.mcalc-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);}
+.mcalc-row:last-child{border-bottom:none;}
+.mcalc-label{font-size:11px;color:var(--text3);font-family:var(--mono);min-width:150px;flex-shrink:0;}
+.mcalc-val{font-size:12px;font-family:var(--mono);font-weight:500;width:85px;text-align:center;flex-shrink:0;}
+.mcalc-val.ok{color:var(--success);}
+.mcalc-val.over{color:var(--danger);}
+.mcalc-badge{font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:10px;}
+.mcalc-badge.ok{background:rgba(90,158,111,0.15);color:#6ab880;border:1px solid rgba(90,158,111,0.3);}
+.mcalc-badge.over{background:rgba(200,92,69,0.15);color:#e07060;border:1px solid rgba(200,92,69,0.3);}
+
+/* Notes */
+.msheet-notes{padding:10px 14px;border-top:1px solid var(--border);}
+.msheet-notes-label{font-size:9px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;}
+.msheet-notes textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:11px;padding:7px 10px;outline:none;min-height:52px;resize:vertical;}
+.msheet-notes textarea:focus{border-color:var(--accent2);}
+
+.pin-screen{position:fixed;inset:0;background:var(--bg);z-index:998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.pin-title{font-family:var(--mono);font-size:14px;color:var(--accent);letter-spacing:0.06em;}
+.pin-sub{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.pin-dots{display:flex;gap:10px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);transition:all 0.15s;}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent);}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,56px);gap:8px;}
+.pin-key{width:56px;height:56px;border-radius:50%;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:18px;font-family:var(--mono);cursor:pointer;transition:all 0.12s;display:flex;align-items:center;justify-content:center;}
+.pin-key:hover{background:var(--bg3);border-color:var(--border2);}
+.pin-key:active{background:var(--accent);color:#0f0f0d;}
+.pin-error{font-size:11px;color:var(--danger);font-family:var(--mono);min-height:16px;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+.pin-shake{animation:shake 0.3s ease;}
+</style>
+  <!-- Firebase via CDN compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    (function(){
+      try {
+        const firebaseConfig = {
+          apiKey: "AIzaSyDK-JGHRLEhnfLHVrK6bv1ukRG4Na4MdMw",
+          authDomain: "beaumont-motor-division.firebaseapp.com",
+          projectId: "beaumont-motor-division",
+          storageBucket: "beaumont-motor-division.firebasestorage.app",
+          messagingSenderId: "753808178222",
+          appId: "1:753808178222:web:049072b5b95cb44254f3bf"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
+        window._stateDoc = db.collection('builds').doc('main');
+        window._firebaseReady = true;
+        window._stateDoc.onSnapshot(snap => {
+          if(snap.exists){
+            const data = snap.data();
+            if(window._lastSaveTime && Date.now() - window._lastSaveTime < 2000) return;
+            if(typeof window.loadFromCloud === 'function') window.loadFromCloud(data);
+          }
+        }, err => console.warn('Firestore listener error:', err));
+        console.log('Firebase connected');
+      } catch(e) {
+        console.warn('Firebase init failed — running offline:', e);
+        window._firebaseReady = false;
+      }
+    })();
+  </script>
+</head>
+<body>
+
+<!-- WIZARD -->
+<div class="wizard-screen" id="wizard">
+<div class="wizard-inner">
+  <div class="wizard-logo">BEAUMONT MOTOR DIVISION</div>
+  <div class="wizard-tagline">build tracker — vehicle setup</div>
+  <div class="progress-dots" id="wiz-dots"></div>
+  <div class="wizard-step active" id="wiz-1" onkeydown="wizHandleEnter(event,1)">
+    <div class="wizard-step-label">Step 1 of 8</div>
+    <div class="wizard-step-title">Name your build</div>
+    <div class="wiz-field"><label>Build name</label><input type="text" id="wiz-buildname" placeholder="e.g. Project Beaumont, The Stage One..."/></div>
+    <div class="wiz-nav"><button class="btn btn-primary" onclick="wizGo(2)">Next</button></div>
+  </div>
+  <div class="wizard-step" id="wiz-2" onkeydown="wizHandleEnter(event,2)">
+    <div class="wizard-step-label">Step 2 of 8</div>
+    <div class="wizard-step-title">Select make</div>
+    <div class="wiz-options">
+      <button class="wiz-option" onclick="wizSelect('make','Land Rover',this)">Land Rover</button>
+      <button class="wiz-option" onclick="wizSelect('make','Toyota',this)">Toyota</button>
+    </div>
+    <div class="wiz-nav"><button class="btn btn-ghost" onclick="wizGo(1)">Back</button><button class="btn btn-primary" id="wiz-next-2" onclick="wizGo(3)" disabled>Next</button></div>
+  </div>
+  <div class="wizard-step" id="wiz-3" onkeydown="wizHandleEnter(event,3)">
+    <div class="wizard-step-label">Step 3 of 8</div>
+    <div class="wizard-step-title">Select model</div>
+    <div class="wiz-options" id="wiz-model-opts"></div>
+    <div class="wiz-nav"><button class="btn btn-ghost" onclick="wizGo(2)">Back</button><button class="btn btn-primary" id="wiz-next-3" onclick="wizGo(4)" disabled>Next</button></div>
+  </div>
+  <div class="wizard-step" id="wiz-4" onkeydown="wizHandleEnter(event,4)">
+    <div class="wizard-step-label">Step 4 of 8</div>
+    <div class="wizard-step-title">Year of manufacture</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:1rem;" id="wiz-year-hint"></div>
+    <div class="wiz-field"><label>Year</label><input type="text" id="wiz-year" placeholder="e.g. 1983" maxlength="4" oninput="wizValidateYear()"/></div>
+    <div style="font-size:11px;color:var(--danger);min-height:16px;margin-bottom:8px;" id="wiz-year-err"></div>
+    <div class="wiz-nav"><button class="btn btn-ghost" onclick="wizGo(3)">Back</button><button class="btn btn-primary" id="wiz-next-4" onclick="wizGo(5)" disabled>Next</button></div>
+  </div>
+  <div class="wizard-step" id="wiz-5" onkeydown="wizHandleEnter(event,5)">
+    <div class="wizard-step-label">Step 5 of 8</div>
+    <div class="wizard-step-title">Select engine</div>
+    <div class="wiz-options" id="wiz-engine-opts"></div>
+    <div class="custom-input-wrap" id="engine-custom-wrap"><label style="display:block;font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:5px;">Describe the engine</label><input type="text" id="engine-custom-input" placeholder="e.g. 1HZ diesel" oninput="wizCustomEngine()"/></div>
+    <div class="wiz-nav"><button class="btn btn-ghost" onclick="wizGo(4)">Back</button><button class="btn btn-primary" id="wiz-next-5" onclick="wizGo(6)" disabled>Next</button></div>
+  </div>
+  <div class="wizard-step" id="wiz-6" onkeydown="wizHandleEnter(event,6)">
+    <div class="wizard-step-label">Step 6 of 8</div>
+    <div class="wizard-step-title">Select gearbox</div>
+    <div class="wiz-options" id="wiz-gearbox-opts"></div>
+    <div class="custom-input-wrap" id="gearbox-custom-wrap"><label style="display:block;font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:5px;">Describe the gearbox</label><input type="text" id="gearbox-custom-input" placeholder="e.g. R380" oninput="wizCustomGearbox()"/></div>
+    <div class="wiz-nav"><button class="btn btn-ghost" onclick="wizGo(5)">Back</button><button class="btn btn-primary" id="wiz-next-6" onclick="wizGo(7)" disabled>Next</button></div>
+  </div>
+  <div class="wizard-step" id="wiz-7" onkeydown="wizHandleEnter(event,7)">
+    <div class="wizard-step-label">Step 7 of 8</div>
+    <div class="wizard-step-title">Vehicle ID</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:1rem;">All optional — editable later in settings.</div>
+    <div id="wiz-id-fields"></div>
+    <div class="wiz-nav"><button class="btn btn-ghost" onclick="wizGo(6)">Back</button><button class="btn btn-primary" onclick="wizGo(8)">Next</button></div>
+  </div>
+  <div class="wizard-step" id="wiz-8" onkeydown="wizHandleEnter(event,8)">
+    <div class="wizard-step-label">Step 8 of 8</div>
+    <div class="wizard-step-title">Review your build</div>
+    <div id="wiz-summary" style="margin-bottom:1.5rem;"></div>
+    <div class="wiz-nav"><button class="btn btn-ghost" onclick="wizGo(7)">Back</button><button class="btn btn-primary" onclick="wizSave()">Save &amp; start build</button></div>
+  </div>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-panel" id="settings-panel" onclick="closeSettings(event)">
+<div class="settings-inner">
+  <div class="settings-header"><div class="settings-title">Settings</div><button class="btn btn-ghost btn-sm" onclick="closeSettings()">✕</button></div>
+  <div class="settings-section">Build</div>
+  <div class="settings-field"><label>Build name</label><input type="text" id="set-buildname" placeholder="Project name"/></div>
+  <div class="settings-section">Vehicle</div>
+  <div class="settings-field"><label>Make</label><select id="set-make" onchange="settingsBuildModel()"><option value="Land Rover">Land Rover</option><option value="Toyota">Toyota</option></select></div>
+  <div class="settings-field"><label>Model</label><select id="set-model" onchange="settingsBuildEngine();settingsBuildGearbox();settingsBuildIdFields();"></select></div>
+  <div class="settings-field"><label>Year</label><input type="text" id="set-year" placeholder="e.g. 1983" maxlength="4"/></div>
+  <div class="settings-section">Drivetrain</div>
+  <div class="settings-field"><label>Engine</label><select id="set-engine"></select></div>
+  <div class="settings-field"><label>Custom engine</label><input type="text" id="set-engine-custom" placeholder="If other selected"/></div>
+  <div class="settings-field"><label>Gearbox</label><select id="set-gearbox"></select></div>
+  <div class="settings-field"><label>Custom gearbox</label><input type="text" id="set-gearbox-custom" placeholder="If other selected"/></div>
+  <div class="settings-section">ID numbers</div>
+  <div id="settings-id-fields"></div>
+  <div class="settings-section">Appearance</div>
+  <div class="settings-field"><label>Original colour</label><input type="text" id="set-colour" placeholder="e.g. Limestone"/></div>
+  <div style="margin-top:1.25rem;"><button class="btn btn-primary" style="width:100%;" onclick="saveSettings()">Save changes</button></div>
+</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none;">
+  <div class="header">
+    <div>
+      <div class="header-title">BEAUMONT MOTOR DIVISION</div>
+      <div class="header-sub">build tracker</div>
+    </div>
+    <div class="header-right">
+      <div class="build-name" id="header-buildname"></div>
+      <div id="sync-indicator" style="font-size:10px;font-family:var(--mono);color:var(--text3);" title="Cloud sync status">☁</div>
+      <button class="settings-btn" onclick="openSettings()">⚙</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('overview',this)">Overview</button>
+    <button class="tab" onclick="showTab('jobs',this)">Jobs</button>
+    <button class="tab" onclick="showTab('inspection',this)">Inspection</button>
+    <button class="tab" onclick="showTab('orders',this)">Orders</button>
+    <button class="tab" onclick="showTab('costs',this)">Costs</button>
+    <button class="tab" onclick="showTab('away',this)">Away</button>
+    <button class="tab" onclick="showTab('quotes',this)">Quotes</button>
+  </div>
+
+  <div id="tab-overview" class="section active">
+    <div class="metrics" id="ov-metrics"></div>
+    <div class="card" style="margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="ov-bar-track"><div class="ov-bar-fill" id="ov-bar" style="width:0%"></div></div>
+        <span id="ov-pct" style="font-size:16px;font-weight:600;min-width:38px;text-align:right;color:var(--accent);">0%</span>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);" id="ov-summary"></div>
+    </div>
+    <div style="font-size:13px;font-weight:500;margin-bottom:8px;">Build phases</div>
+    <div class="phase-list" id="phase-list"></div>
+    <div style="font-size:13px;font-weight:500;margin-bottom:8px;">Components</div>
+    <div class="comp-grid" id="comp-grid"></div>
+  </div>
+
+  <div id="tab-jobs" class="section">
+    <div class="seg">
+      <button class="seg-btn active" id="seg-all" onclick="switchJobMode('all')">All jobs</button>
+      <button class="seg-btn" id="seg-comp" onclick="switchJobMode('comp')">By component</button>
+    </div>
+    <div class="comp-pills" id="comp-pills" style="display:none;"></div>
+    <div id="jobs-list"></div>
+  </div>
+
+  <div id="tab-inspection" class="section">
+    <!-- Mode toggle -->
+    <div class="seg" style="margin-bottom:1rem;">
+      <button class="seg-btn active" id="insp-seg-measure" onclick="switchInspMode('measure')">Measurements</button>
+      <button class="seg-btn" id="insp-seg-findings" onclick="switchInspMode('findings')">Findings</button>
+    </div>
+
+    <!-- MEASUREMENTS panel -->
+    <div id="insp-measure-panel">
+      <div class="comp-pills" id="insp-comp-pills"></div>
+      <div class="comp-pills" id="insp-sub-pills" style="margin-top:-4px;"></div>
+      <div id="insp-measure-fields"></div>
+    </div>
+
+    <!-- FINDINGS panel -->
+    <div id="insp-findings-panel" style="display:none;">
+      <div style="margin-bottom:10px;">
+        <button class="btn btn-primary btn-sm" onclick="logOverlayOpen()">+ Log finding</button>
+      </div>
+      <div class="filter-bar" id="insp-filters"></div>
+      <div id="insp-list"></div>
+    </div>
+  </div>
+
+  <div id="tab-orders" class="section">
+    <div class="section-divider">Quick orders</div>
+    <div id="quick-list"></div>
+    <div class="section-divider" style="margin-top:1rem;">Pipeline</div>
+    <div class="pipeline" id="order-pipeline"></div>
+  </div>
+
+  <div id="tab-costs" class="section">
+    <div class="metrics" id="costs-metrics"></div>
+    <div class="card">
+      <div class="card-title">Add expense</div>
+      <div class="row"><input type="text" id="cost-desc" placeholder="Description" style="flex:2;"/><select id="cost-cat"><option>Parts</option><option>Services</option><option>Tools</option><option>Materials</option><option>Consumables</option><option>Other</option></select></div>
+      <div class="row"><input type="text" id="cost-supplier" placeholder="Supplier"/><input type="number" id="cost-amount" placeholder="Amount $" style="flex:none;width:110px;"/></div>
+      <div class="row"><span class="field-label">Date</span><input type="date" id="cost-date" style="flex:none;width:130px;"/><input type="text" id="cost-notes" placeholder="Notes"/><button class="btn btn-primary" onclick="addCost()">Add</button></div>
+    </div>
+    <div id="costs-list"></div>
+  </div>
+
+  <div id="tab-away" class="section">
+    <div class="card">
+      <div class="card-title">Log item away</div>
+      <div class="row"><input type="text" id="away-item" placeholder="Item" style="flex:2;"/><input type="text" id="away-where" placeholder="Where sent"/></div>
+      <div class="row"><span class="field-label">Sent</span><input type="date" id="away-sent" style="flex:none;width:130px;"/><span class="field-label">Back</span><input type="date" id="away-eta" style="flex:none;width:130px;"/><input type="text" id="away-notes" placeholder="Contact"/><button class="btn btn-primary" onclick="addAway()">Log</button></div>
+    </div>
+    <div id="away-list"></div>
+  </div>
+
+  <div id="tab-quotes" class="section">
+    <div class="card">
+      <div class="card-title">Add quote</div>
+      <div class="row"><input type="text" id="q-desc" placeholder="Work / item" style="flex:2;"/><input type="text" id="q-supplier" placeholder="Supplier"/></div>
+      <div class="row"><span class="field-label">Date</span><input type="date" id="q-date" style="flex:none;width:130px;"/><input type="number" id="q-amount" placeholder="$" style="flex:none;width:90px;"/><select id="q-status"><option value="pending">Pending</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option></select><button class="btn btn-primary" onclick="addQuote()">Add</button></div>
+      <div class="row"><input type="text" id="q-notes" placeholder="Notes" style="width:100%;"/></div>
+    </div>
+    <div id="quotes-list"></div>
+  </div>
+
+  <button class="fab" onclick="openQuickCapture()">+</button>
+</div>
+
+<!-- QUICK ORDER MODAL -->
+<div class="overlay" id="quick-overlay" onclick="closeOverlay('quick-overlay',event)">
+  <div class="modal">
+    <div class="modal-title">Quick order</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:10px;">Capture what you need — flesh it out later</div>
+    <input type="text" id="quick-input" placeholder="Item name..." onkeydown="if(event.key==='Enter')document.getElementById('quick-desc').focus()"/>
+    <input type="text" id="quick-desc" placeholder="Description / notes (optional)" onkeydown="if(event.key==='Enter')saveQuickItem()"/>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+      <span class="field-label">Qty</span>
+      <input type="number" id="quick-qty" placeholder="1" style="flex:none;width:70px;min-width:unset;" min="1"/>
+    </div>
+    <div class="modal-btns"><button class="btn btn-ghost" onclick="closeOverlay('quick-overlay')">Cancel</button><button class="btn btn-primary" onclick="saveQuickItem()">Add to quick orders</button></div>
+  </div>
+</div>
+
+<!-- ADD ORDER MODAL -->
+<div class="overlay" id="order-overlay" onclick="closeOverlay('order-overlay',event)">
+  <div class="modal">
+    <div class="modal-title" id="order-modal-title">Add order</div>
+    <input type="text" id="om-item" placeholder="Part / item name"/>
+    <input type="text" id="om-supplier" placeholder="Supplier"/>
+    <input type="text" id="om-notes" placeholder="Notes / part number"/>
+    <input type="number" id="om-cost" placeholder="Cost (£)"/>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+      <span class="field-label">Status</span>
+      <select id="om-status" style="flex:1;" onchange="toggleOrderDate()">
+        <option value="toorder">To order</option>
+        <option value="ordered">Ordered</option>
+        <option value="arrived">Arrived</option>
+      </select>
+    </div>
+    <div id="om-date-wrap" style="display:none;margin-bottom:8px;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="field-label">Date ordered</span>
+        <input type="date" id="om-date" style="flex:1;min-width:unset;"/>
+      </div>
+    </div>
+    <div class="modal-btns"><button class="btn btn-ghost" onclick="closeOverlay('order-overlay')">Cancel</button><button class="btn btn-primary" id="om-save-btn" onclick="saveOrder()">Save</button></div>
+  </div>
+</div>
+
+<!-- LOG FINDING MODAL -->
+<div class="overlay" id="log-overlay" onclick="closeOverlay('log-overlay',event)">
+  <div class="modal">
+    <div class="modal-title" id="log-title">Log finding</div>
+    <select id="log-sev" style="flex:none;width:100%;margin-bottom:8px;"><option value="noted">Noted — monitor</option><option value="med">Needs attention</option><option value="urgent">Urgent — must fix</option></select>
+    <textarea id="log-obs" placeholder="What was observed..."></textarea>
+    <textarea id="log-rect" placeholder="What needs to be done..." style="min-height:44px;"></textarea>
+    <div class="modal-btns"><button class="btn btn-ghost" onclick="closeOverlay('log-overlay')">Cancel</button><button class="btn btn-primary" onclick="saveLogFinding()">Log finding</button></div>
+  </div>
+</div>
+
+<script>
+const COMPONENTS=['Engine','Gearbox','Front axle','Rear axle','Chassis','Suspension','Body','Electrical'];
+const PHASES=[{name:'Axles',comps:['Front axle','Rear axle']},{name:'Gearbox',comps:['Gearbox']},{name:'Engine',comps:['Engine']},{name:'Suspension',comps:['Suspension']},{name:'Chassis',comps:['Chassis']},{name:'Body',comps:['Body']},{name:'Electrical',comps:['Electrical']}];
+const STORAGE_KEY='bmd_tracker_v1';
+const MODELS={'Land Rover':[{id:'series3',label:'Series III',sub:'1971–1985',yearMin:1971,yearMax:1985},{id:'series3-v8',label:'Series III Stage One',sub:'1979–1985',yearMin:1979,yearMax:1985}],'Toyota':[{id:'hj60',label:'LandCruiser HJ60',sub:'1980–1987',yearMin:1980,yearMax:1987}]};
+const ENGINES={'series3':[{id:'225p',label:'2.25 Petrol'},{id:'225d',label:'2.25 Diesel'}],'series3-v8':[{id:'35v8',label:'3.5 V8',sub:'Rover V8'},{id:'4bd1',label:'4BD1',sub:'Isuzu 2.8 diesel'}],'hj60':[{id:'2h',label:'2H Diesel'},{id:'2h-t',label:'2H + turbo'},{id:'12ht',label:'12H-T',sub:'Factory turbo'}]};
+const GEARBOXES={'series3':[{id:'s3-4spd',label:'Series III 4-speed'}],'series3-v8':[{id:'lt95',label:'LT95',sub:'4-speed with integral transfer',prefill:true}],'hj60':[{id:'h41',label:'H41/H42 4-speed'},{id:'h55f',label:'H55F 5-speed'}]};
+const ID_FIELDS={'Land Rover':[{id:'chassis',label:'Chassis number'},{id:'engine-num',label:'Engine number'},{id:'head-num',label:'Head number'},{id:'gearbox-code',label:'Gearbox code'}],'Toyota':[{id:'chassis',label:'Chassis number'},{id:'vin',label:'VIN'},{id:'engine-num',label:'Engine number'},{id:'gearbox-code',label:'Gearbox code'}]};
+const ENGINE_SPECS={'35v8':{name:'Rover 3.5 V8',subcomps:{'Head':{fields:[{label:'Valve stem inlet',std:'8.664–8.679mm',lo:8.664,hi:8.679},{label:'Valve stem exhaust',std:'8.651–8.666mm',lo:8.651,hi:8.666}]},'Block':{fields:[{label:'Bore Cyl 1',std:'88.90mm',lo:88.895,hi:88.935},{label:'Bore Cyl 2',std:'88.90mm',lo:88.895,hi:88.935},{label:'Bore Cyl 3',std:'88.90mm',lo:88.895,hi:88.935},{label:'Bore Cyl 4',std:'88.90mm',lo:88.895,hi:88.935},{label:'Bore Cyl 5',std:'88.90mm',lo:88.895,hi:88.935},{label:'Bore Cyl 6',std:'88.90mm',lo:88.895,hi:88.935},{label:'Bore Cyl 7',std:'88.90mm',lo:88.895,hi:88.935},{label:'Bore Cyl 8',std:'88.90mm',lo:88.895,hi:88.935}]},'Crank':{fields:[{label:'Main journal 1',std:'58.400–58.413mm',lo:58.400,hi:58.413,us1lo:58.146,us1hi:58.158},{label:'Main journal 2',std:'58.400–58.413mm',lo:58.400,hi:58.413,us1lo:58.146,us1hi:58.158},{label:'Main journal 3',std:'58.400–58.413mm',lo:58.400,hi:58.413,us1lo:58.146,us1hi:58.158},{label:'Main journal 4',std:'58.400–58.413mm',lo:58.400,hi:58.413,us1lo:58.146,us1hi:58.158},{label:'Main journal 5',std:'58.400–58.413mm',lo:58.400,hi:58.413,us1lo:58.146,us1hi:58.158},{label:'Big end 1',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559},{label:'Big end 2',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559},{label:'Big end 3',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559},{label:'Big end 4',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559},{label:'Big end 5',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559},{label:'Big end 6',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559},{label:'Big end 7',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559},{label:'Big end 8',std:'50.800–50.812mm',lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559}]},'Cam':{fields:[{label:'Journal 1 run-out',std:'≤0.05mm',lo:0,hi:0.05},{label:'Journal 2 run-out',std:'≤0.05mm',lo:0,hi:0.05},{label:'Journal 3 run-out',std:'≤0.05mm',lo:0,hi:0.05}]}}},'225p':{name:'2.25 Petrol',subcomps:{'Head':{fields:[{label:'Head flatness',std:'≤0.05mm',lo:0,hi:0.05}]},'Block':{fields:[{label:'Bore Cyl 1',std:'90.47mm',lo:90.47,hi:90.52},{label:'Bore Cyl 2',std:'90.47mm',lo:90.47,hi:90.52},{label:'Bore Cyl 3',std:'90.47mm',lo:90.47,hi:90.52},{label:'Bore Cyl 4',std:'90.47mm',lo:90.47,hi:90.52}]},'Crank':{fields:[{label:'Main journal 1',std:'63.487–63.500mm',lo:63.487,hi:63.500},{label:'Big end 1',std:'50.800–50.812mm',lo:50.800,hi:50.812}]},'Cam':{fields:[{label:'Journal run-out',std:'≤0.05mm',lo:0,hi:0.05}]}}}};
+
+const DEFAULT_JOBS=[
+  {name:'Remove & strip engine',component:'Engine',weight:'major',isInspect:false},
+  {name:'Clean all components',component:'Engine',weight:'medium',isInspect:false},
+  {name:'Inspect & measure components',component:'Engine',weight:'huge',isInspect:true},
+  {name:'Send to machinist',component:'Engine',weight:'minor',isInspect:false},
+  {name:'Rebuild engine',component:'Engine',weight:'huge',isInspect:false},
+];
+
+let state={jobs:[],orders:[],costs:[],away:[],quotes:[],inspections:[],quickList:[],measurements:{},vehicle:{}};
+let jobMode='all',activeComp='Front axle',inspFilter='all',logJobId=null,logComp=null;
+let activeInspectJob=null,activeSubComp=null;
+let wiz={make:'',modelId:'',model:'',engineId:'',engine:'',gearboxId:'',gearbox:'',year:'',buildName:'',ids:{}};
+let wizStep=1;
+let editingOrderId=null;
+
+function loadState(){
+  try{const d=localStorage.getItem(STORAGE_KEY);if(d)state=JSON.parse(d);}catch(e){}
+  if(!state.inspections)state.inspections=[];
+  if(!state.quickList)state.quickList=[];
+  if(!state.jobs)state.jobs=[];
+  if(!state.measurements)state.measurements={};
+  if(!state.measLocked)state.measLocked={};
+  if(!state.vehicle)state.vehicle={};
+  if(!state.orders)state.orders=[];
+  if(!state.costs)state.costs=[];
+  if(!state.away)state.away=[];
+  if(!state.quotes)state.quotes=[];
+  // Migrate old jobs - remove note vs notes confusion, ensure weight field exists
+  state.jobs=state.jobs.map(j=>({...j,note:j.note||j.notes||'',weight:j.weight||'medium',isInspect:j.isInspect||false}));
+  // Ensure only ONE inspect job exists in Engine
+  const inspJobs=state.jobs.filter(j=>j.isInspect);
+  if(inspJobs.length>1){
+    const keep=inspJobs[0].id;
+    state.jobs=state.jobs.filter(j=>!j.isInspect||j.id===keep);
+  }
+}
+function saveState(){
+  // Always save to localStorage as backup
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
+  // Save to Firestore if available
+  if(window._firebaseReady && window._stateDoc){
+    window._lastSaveTime = Date.now();
+    const si=document.getElementById('sync-indicator');if(si)si.textContent='↑';
+    window._stateDoc.set(state)
+      .then(()=>{const s=document.getElementById('sync-indicator');if(s)s.textContent='☁';})
+      .catch(e=>{console.warn('Firestore save failed:',e);const s=document.getElementById('sync-indicator');if(s)s.textContent='!';});
+  }
+}
+
+window.loadFromCloud = function(data){
+  if(!data||!data.vehicle)return;
+  state = {...state, ...data};
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
+  // If app is showing, re-render
+  if(document.getElementById('main-app').style.display!=='none'){
+    updateHeaderBuildName();
+    render();
+  }
+  console.log('Synced from cloud');
+};
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function today(){return new Date().toISOString().slice(0,10);}
+function overdue(d){return d&&d<today();}
+function fmt(v){return '$'+parseFloat(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`;}
+function daysSince(d){if(!d)return null;const diff=Date.now()-new Date(d).getTime();return Math.floor(diff/86400000);}
+function barColor(pct){if(pct===100)return'#5a9e6f';if(pct>=60)return'#4a82b8';if(pct>=20)return'#c87d3a';return'#5a5855';}
+function weightVal(w){return{minor:1,medium:2,major:4,huge:8}[w]||2;}
+function getCompStats(comp){const jobs=state.jobs.filter(j=>j.component===comp);const totalW=jobs.reduce((s,j)=>s+weightVal(j.weight),0);const doneW=jobs.filter(j=>j.status==='done').reduce((s,j)=>s+weightVal(j.weight),0);const done=jobs.filter(j=>j.status==='done').length;return{total:jobs.length,done,pct:totalW?Math.round(doneW/totalW*100):0};}
+function getActivePhase(){for(let i=0;i<PHASES.length;i++){const p=PHASES[i];const tj=p.comps.reduce((s,c)=>s+state.jobs.filter(j=>j.component===c).length,0);const dj=p.comps.reduce((s,c)=>s+state.jobs.filter(j=>j.component===c&&j.status==='done').length,0);if(!tj||Math.round(dj/tj*100)<80)return i;}return PHASES.length-1;}
+function getCurrentEngineSpec(){const eid=state.vehicle&&state.vehicle.engineId;return eid&&ENGINE_SPECS[eid]?ENGINE_SPECS[eid]:null;}
+
+// WIZARD
+function initWizard(){wizStep=1;updateWizDots();document.getElementById('wizard').classList.add('visible');}
+function updateWizDots(){document.getElementById('wiz-dots').innerHTML=Array.from({length:8},(_,i)=>`<div class="progress-dot${i<wizStep?' done':''}"></div>`).join('');}
+function wizSelect(field,value,el){wiz[field]=value;el.closest('.wiz-options').querySelectorAll('.wiz-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');const btn=document.getElementById('wiz-next-'+wizStep);if(btn)btn.disabled=false;if(field==='make')wizBuildModels();if(field==='model'){wiz.modelId=el.dataset.id;wizBuildEngines();wizBuildGearboxes();wizBuildIdFields();wizBuildYearHint();}if(field==='engine'){wiz.engineId=el.dataset.id;wiz.engine=value;document.getElementById('engine-custom-wrap').classList.remove('visible');}if(field==='gearbox'){wiz.gearboxId=el.dataset.id;wiz.gearbox=value;document.getElementById('gearbox-custom-wrap').classList.remove('visible');}}
+function wizBuildModels(){const opts=MODELS[wiz.make]||[];document.getElementById('wiz-model-opts').innerHTML=opts.map(m=>`<button class="wiz-option"data-id="${m.id}"onclick="wizSelect('model','${m.label}',this)">${m.label}<div class="wiz-option-sub">${m.sub}</div></button>`).join('');wiz.model='';wiz.modelId='';const btn=document.getElementById('wiz-next-3');if(btn)btn.disabled=true;}
+function wizBuildEngines(){const opts=ENGINES[wiz.modelId]||[];document.getElementById('wiz-engine-opts').innerHTML=opts.map(e=>`<button class="wiz-option"data-id="${e.id}"onclick="wizSelect('engine','${e.label}',this)">${e.label}${e.sub?`<div class="wiz-option-sub">${e.sub}</div>`:''}</button>`).join('')+`<button class="wiz-option custom-opt"onclick="wizSelectCustomEngine(this)">Other / custom<div class="wiz-option-sub">Retrofitted or non-standard</div></button>`;wiz.engine='';wiz.engineId='';const btn=document.getElementById('wiz-next-5');if(btn)btn.disabled=true;document.getElementById('engine-custom-wrap').classList.remove('visible');}
+function wizBuildGearboxes(){const opts=GEARBOXES[wiz.modelId]||[];document.getElementById('wiz-gearbox-opts').innerHTML=opts.map(g=>`<button class="wiz-option"data-id="${g.id}"onclick="wizSelect('gearbox','${g.label}',this)">${g.label}${g.sub?`<div class="wiz-option-sub">${g.sub}</div>`:''}</button>`).join('')+`<button class="wiz-option custom-opt"onclick="wizSelectCustomGearbox(this)">Other / custom<div class="wiz-option-sub">Retrofitted or non-standard</div></button>`;wiz.gearbox='';wiz.gearboxId='';const btn=document.getElementById('wiz-next-6');if(btn)btn.disabled=true;document.getElementById('gearbox-custom-wrap').classList.remove('visible');const prefill=opts.find(g=>g.prefill);if(prefill){const el=document.querySelector(`[data-id="${prefill.id}"]`);if(el){wizSelect('gearbox',prefill.label,el);if(btn)btn.disabled=false;}}}
+function wizBuildYearHint(){const allM=Object.values(MODELS).flat();const m=allM.find(x=>x.id===wiz.modelId);if(m)document.getElementById('wiz-year-hint').textContent=`${wiz.model} production: ${m.yearMin}–${m.yearMax}`;}
+function wizBuildIdFields(){const fields=ID_FIELDS[wiz.make]||[];document.getElementById('wiz-id-fields').innerHTML=fields.map(f=>`<div class="wiz-field"><label>${f.label} <span style="color:var(--text3);font-size:10px;">optional</span></label><input type="text"id="wiz-id-${f.id}"/></div>`).join('');}
+function wizSelectCustomEngine(el){el.closest('.wiz-options').querySelectorAll('.wiz-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');wiz.engineId='custom';wiz.engine='';document.getElementById('engine-custom-wrap').classList.add('visible');document.getElementById('wiz-next-5').disabled=true;document.getElementById('engine-custom-input').focus();}
+function wizSelectCustomGearbox(el){el.closest('.wiz-options').querySelectorAll('.wiz-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');wiz.gearboxId='custom';wiz.gearbox='';document.getElementById('gearbox-custom-wrap').classList.add('visible');document.getElementById('wiz-next-6').disabled=true;document.getElementById('gearbox-custom-input').focus();}
+function wizCustomEngine(){const v=document.getElementById('engine-custom-input').value.trim();wiz.engine=v;document.getElementById('wiz-next-5').disabled=!v;}
+function wizCustomGearbox(){const v=document.getElementById('gearbox-custom-input').value.trim();wiz.gearbox=v;document.getElementById('wiz-next-6').disabled=!v;}
+function wizValidateYear(){const val=document.getElementById('wiz-year').value.trim();const err=document.getElementById('wiz-year-err');const btn=document.getElementById('wiz-next-4');const allM=Object.values(MODELS).flat();const m=allM.find(x=>x.id===wiz.modelId);const yr=parseInt(val);if(!val||val.length<4){err.textContent='';btn.disabled=true;return;}if(isNaN(yr)){err.textContent='Enter a valid year.';btn.disabled=true;return;}if(m&&(yr<m.yearMin||yr>m.yearMax)){err.textContent=`${wiz.model} was produced ${m.yearMin}–${m.yearMax}.`;btn.disabled=true;return;}err.textContent='';btn.disabled=false;wiz.year=val;}
+function wizCollectIds(){const fields=ID_FIELDS[wiz.make]||[];wiz.ids={};fields.forEach(f=>{const el=document.getElementById('wiz-id-'+f.id);if(el&&el.value.trim())wiz.ids[f.label]=el.value.trim();});}
+function wizBuildSummary(){wizCollectIds();const rows=[['Build name',wiz.buildName||'—'],['Make',wiz.make],['Model',wiz.model],['Year',wiz.year],['Engine',wiz.engine],['Gearbox',wiz.gearbox]];const idRows=Object.entries(wiz.ids);let html=rows.map(([l,v])=>`<div class="wiz-summary-row"><span class="wiz-summary-label">${l}</span><span class="wiz-summary-value">${v||'—'}</span></div>`).join('');if(idRows.length)html+=idRows.map(([l,v])=>`<div class="wiz-summary-row"><span class="wiz-summary-label">${l}</span><span class="wiz-summary-value">${v}</span></div>`).join('');document.getElementById('wiz-summary').innerHTML=html;}
+function wizGo(n){document.getElementById('wiz-'+wizStep).classList.remove('active');wizStep=n;updateWizDots();if(n===8)wizBuildSummary();document.getElementById('wiz-'+n).classList.add('active');wiz.buildName=document.getElementById('wiz-buildname').value.trim();}
+function wizHandleEnter(e,step){if(e.key==='Enter'){const btn=document.getElementById('wiz-next-'+step);if(btn&&!btn.disabled)btn.click();else if(step===8)wizSave();}}
+function wizSave(){wiz.buildName=document.getElementById('wiz-buildname').value.trim();state.vehicle={...wiz};if(state.jobs.length===0){const d=today();DEFAULT_JOBS.forEach(j=>{state.jobs.push({id:uid(),name:j.name,weight:j.weight||'medium',status:'todo',component:j.component,note:'',isInspect:j.isInspect||false,created:d});});}saveState();document.getElementById('wizard').classList.remove('visible');document.getElementById('main-app').style.display='block';updateHeaderBuildName();render();}
+
+// SETTINGS
+function openSettings(){const v=state.vehicle||{};document.getElementById('set-buildname').value=v.buildName||'';document.getElementById('set-make').value=v.make||'Land Rover';settingsBuildModel();setTimeout(()=>{document.getElementById('set-model').value=v.modelId||'';settingsBuildEngine();settingsBuildGearbox();settingsBuildIdFields();setTimeout(()=>{document.getElementById('set-engine').value=v.engineId||'';document.getElementById('set-engine-custom').value=v.engineId==='custom'?v.engine:'';document.getElementById('set-gearbox').value=v.gearboxId||'';document.getElementById('set-gearbox-custom').value=v.gearboxId==='custom'?v.gearbox:'';},50);},50);document.getElementById('set-year').value=v.year||'';document.getElementById('set-colour').value=(v.ids&&v.ids['Original colour'])||'';settingsBuildIdFields();document.getElementById('settings-panel').classList.add('visible');}
+function closeSettings(e){if(!e||e.target===document.getElementById('settings-panel'))document.getElementById('settings-panel').classList.remove('visible');}
+function settingsBuildModel(){const make=document.getElementById('set-make').value;const opts=MODELS[make]||[];document.getElementById('set-model').innerHTML=opts.map(m=>`<option value="${m.id}">${m.label}</option>`).join('');settingsBuildEngine();settingsBuildGearbox();settingsBuildIdFields();}
+function settingsBuildEngine(){const modelId=document.getElementById('set-model').value;const opts=ENGINES[modelId]||[];document.getElementById('set-engine').innerHTML=opts.map(e=>`<option value="${e.id}">${e.label}</option>`).join('')+`<option value="custom">Other / custom</option>`;}
+function settingsBuildGearbox(){const modelId=document.getElementById('set-model').value;const opts=GEARBOXES[modelId]||[];document.getElementById('set-gearbox').innerHTML=opts.map(g=>`<option value="${g.id}">${g.label}</option>`).join('')+`<option value="custom">Other / custom</option>`;}
+function settingsBuildIdFields(){const make=document.getElementById('set-make').value;const fields=ID_FIELDS[make]||[];const v=state.vehicle||{};document.getElementById('settings-id-fields').innerHTML=fields.map(f=>`<div class="settings-field"><label>${f.label}</label><input type="text"id="sset-${f.id}"value="${v.ids&&v.ids[f.label]?v.ids[f.label]:''}"/></div>`).join('');}
+function saveSettings(){const make=document.getElementById('set-make').value;const modelId=document.getElementById('set-model').value;const modelObj=(MODELS[make]||[]).find(m=>m.id===modelId)||{};const engineId=document.getElementById('set-engine').value;const engineObj=(ENGINES[modelId]||[]).find(e=>e.id===engineId)||{};const gearboxId=document.getElementById('set-gearbox').value;const gearboxObj=(GEARBOXES[modelId]||[]).find(g=>g.id===gearboxId)||{};const customEngine=document.getElementById('set-engine-custom').value.trim();const customGearbox=document.getElementById('set-gearbox-custom').value.trim();const fields=ID_FIELDS[make]||[];const ids={};fields.forEach(f=>{const el=document.getElementById('sset-'+f.id);if(el&&el.value.trim())ids[f.label]=el.value.trim();});const colour=document.getElementById('set-colour').value.trim();if(colour)ids['Original colour']=colour;state.vehicle={buildName:document.getElementById('set-buildname').value.trim(),make,modelId,model:modelObj.label||'',engineId,engine:engineId==='custom'?customEngine:engineObj.label||'',gearboxId,gearbox:gearboxId==='custom'?customGearbox:gearboxObj.label||'',year:document.getElementById('set-year').value.trim(),ids};saveState();updateHeaderBuildName();document.getElementById('settings-panel').classList.remove('visible');}
+function updateHeaderBuildName(){const v=state.vehicle||{};const el=document.getElementById('header-buildname');if(el)el.textContent=v.buildName||(v.make?`${v.year||''} ${v.make}`.trim():'');}
+
+// APP
+function showTab(t,el){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById('tab-'+t).classList.add('active');if(el)el.classList.add('active');render();if(t==='inspection')renderInspectMeasure();}
+function switchJobMode(m){jobMode=m;document.getElementById('seg-all').classList.toggle('active',m==='all');document.getElementById('seg-comp').classList.toggle('active',m==='comp');document.getElementById('comp-pills').style.display=m==='comp'?'flex':'none';renderJobs();}
+function selectComp(c){activeComp=c;buildPills();renderJobs();}
+function buildPills(){document.getElementById('comp-pills').innerHTML=COMPONENTS.map(c=>`<button class="pill${c===activeComp?' active':''}"onclick="selectComp('${c}')">${c}</button>`).join('');}
+function switchTabToJobs(comp){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById('tab-jobs').classList.add('active');document.querySelectorAll('#main-app .tab')[1].classList.add('active');jobMode='comp';activeComp=comp;document.getElementById('seg-all').classList.remove('active');document.getElementById('seg-comp').classList.add('active');document.getElementById('comp-pills').style.display='flex';buildPills();renderJobs();}
+
+function renderOverview(){
+  const total=state.jobs.length,done=state.jobs.filter(j=>j.status==='done').length,pct=total?Math.round(done/total*100):0;
+  const urgent=state.inspections.filter(i=>i.severity==='urgent'&&i.status!=='actioned').length;
+  const toOrder=state.orders.filter(o=>o.status==='toorder').length;
+  const ordered=state.orders.filter(o=>o.status==='ordered').length;
+  document.getElementById('ov-metrics').innerHTML=`<div class="metric"><div class="metric-label">Total jobs</div><div class="metric-value">${total}</div></div><div class="metric"><div class="metric-label">Completed</div><div class="metric-value">${done}</div></div><div class="metric"><div class="metric-label">To order</div><div class="metric-value">${toOrder}</div></div><div class="metric"><div class="metric-label">Ordered</div><div class="metric-value">${ordered}</div></div><div class="metric"><div class="metric-label"style="${urgent?'color:var(--danger)':''}">Urgent</div><div class="metric-value"style="${urgent?'color:var(--danger)':''}">${urgent}</div></div><div class="metric"><div class="metric-label">Spent</div><div class="metric-value"style="font-size:13px;">${fmt(state.costs.reduce((s,c)=>s+(c.amount||0),0))}</div></div>`;
+  document.getElementById('ov-bar').style.width=pct+'%';document.getElementById('ov-pct').textContent=pct+'%';
+  document.getElementById('ov-summary').textContent=total?`${done} of ${total} done · ${total-done} remaining`:'No jobs yet.';
+  const ap=getActivePhase();
+  document.getElementById('phase-list').innerHTML=PHASES.map((p,i)=>{const tj=p.comps.reduce((s,c)=>s+state.jobs.filter(j=>j.component===c).length,0);const dj=p.comps.reduce((s,c)=>s+state.jobs.filter(j=>j.component===c&&j.status==='done').length,0);const pp=tj?Math.round(dj/tj*100):0;const isDone=pp>=80,isActive=i===ap;return`<div class="phase-row"><div class="phase-num${isDone?' done':isActive?' active':''}">${i+1}</div><div class="phase-info"><div class="phase-name"style="${isActive?'color:var(--accent)':isDone?'color:var(--text2)':'color:var(--text3)'}">${p.name}</div><div class="phase-comps">${p.comps.join(', ')}</div></div><div class="phase-bar-track"><div class="phase-bar-fill"style="width:${pp}%;background:${barColor(pp)};"></div></div><div class="phase-pct">${pp}%</div></div>`;}).join('');
+  document.getElementById('comp-grid').innerHTML=COMPONENTS.map(comp=>{const s=getCompStats(comp),col=barColor(s.pct);const urg=state.inspections.filter(i=>i.comp===comp&&i.severity==='urgent'&&i.status!=='actioned').length;const phaseIdx=PHASES.findIndex(p=>p.comps.includes(comp));return`<div class="comp-card${phaseIdx===ap?' active-phase':''}"onclick="switchTabToJobs('${comp}')"><div class="comp-card-name">${comp}${urg?` <span style="color:var(--danger);font-size:10px;">●</span>`:''}</div><div class="comp-card-meta">${s.done}/${s.total} · ${s.pct}%</div><div class="comp-bar-track"><div class="comp-bar-fill"style="width:${s.pct}%;background:${col};"></div></div></div>`;}).join('');
+}
+
+function getSpec(){
+  let s=getCurrentEngineSpec();
+  if(!s){const v=state.vehicle&&state.vehicle.modelId;if(v==='series3-v8')s=ENGINE_SPECS['35v8'];else if(v==='series3')s=ENGINE_SPECS['225p'];}
+  return s;
+}
+
+function getInspectProgress(jobId){
+  const spec=getSpec();
+  if(!spec)return{done:false,partial:false,filled:0,total:0};
+  const m=state.measurements[jobId]||{};
+  const scs=Object.keys(spec.subcomps);
+  let filled=0;
+  scs.forEach(sc=>{
+    if(spec.subcomps[sc].fields.every(f=>m[sc]&&m[sc][f.label]&&m[sc][f.label]!==''))filled++;
+  });
+  return{done:filled===scs.length,partial:filled>0&&filled<scs.length,filled,total:scs.length};
+}
+
+function toggleInspectPanel(jobId){
+  if(activeInspectJob===jobId){activeInspectJob=null;activeSubComp=null;}
+  else{
+    activeInspectJob=jobId;
+    const spec=getSpec();
+    activeSubComp=spec?Object.keys(spec.subcomps)[0]:null;
+  }
+  renderJobs();
+}
+
+function selectSubComp(sc){activeSubComp=sc;renderJobs();}
+
+function classifyMeasure(val,field){
+  const v=parseFloat(val);
+  if(isNaN(v)||val==='')return'';
+  if(field.lo===0&&field.hi>0)return v<=field.hi?'ok':'over';
+  if(v>=field.lo&&v<=field.hi)return'ok';
+  if(field.us1lo!==undefined&&v>=field.us1lo&&v<=field.us1hi)return'warn';
+  return'over';
+}
+
+function onMeasureInput(jobId,subComp,fieldLabel,domId,value){
+  if(!state.measurements[jobId])state.measurements[jobId]={};
+  if(!state.measurements[jobId][subComp])state.measurements[jobId][subComp]={};
+  state.measurements[jobId][subComp][fieldLabel]=value;
+  const spec=getSpec();
+  const field=spec&&spec.subcomps[subComp]?spec.subcomps[subComp].fields.find(f=>f.label===fieldLabel):null;
+  if(field){
+    const cls=classifyMeasure(value,field);
+    const inp=document.getElementById(domId);if(inp)inp.className='measure-input'+(cls?' '+cls:'');
+    const dot=document.getElementById('dot-'+domId);if(dot)dot.className='status-dot'+(cls?' '+cls:'');
+  }
+  const prog=getInspectProgress(jobId);
+  if(prog.done){const j=state.jobs.find(x=>x.id===jobId);if(j&&j.status!=='done'){j.status='done';}}
+  saveState();renderOverview();
+}
+
+function renderInspectPanel(job){
+  const spec=getSpec();
+  if(!spec)return'<div class="inspect-panel"><div style="font-size:11px;color:var(--text3);font-family:var(--mono);">Complete the wizard and select your engine to unlock measurements.</div></div>';
+  const m=state.measurements[job.id]||{};
+  const scs=Object.keys(spec.subcomps);
+  const tabs=scs.map(sc=>{
+    const done=spec.subcomps[sc].fields.every(f=>m[sc]&&m[sc][f.label]&&m[sc][f.label]!=='');
+    return`<button class="sub-comp-btn${sc===activeSubComp?' active':''}${done?' complete':''}" onclick="selectSubComp('${sc}')">${sc}${done?' ✓':''}</button>`;
+  }).join('');
+  const fields=activeSubComp&&spec.subcomps[activeSubComp]?spec.subcomps[activeSubComp].fields:[];
+  const subM=m[activeSubComp]||{};
+  let rows='<div class="measure-row header-row"><div>Measurement</div><div class="spec-val">Spec</div><div class="spec-val">Value</div><div></div></div>';
+  fields.forEach(f=>{
+    const val=subM[f.label]||'';
+    const cls=val?classifyMeasure(val,f):'';
+    const id='mi_'+job.id+'_'+(activeSubComp||'').replace(/\s/g,'_')+'_'+f.label.replace(/[\s—–]/g,'_');
+    rows+=`<div class="measure-row">
+      <div class="measure-label">${f.label}</div>
+      <div class="spec-val">${f.std}</div>
+      <input class="measure-input${cls?' '+cls:''}" id="${id}" value="${val}" placeholder="mm"
+        oninput="onMeasureInput('${job.id}','${activeSubComp||''}','${f.label}','${id}',this.value)"/>
+      <div class="status-dot${cls?' '+cls:''}" id="dot-${id}"></div>
+    </div>`;
+  });
+  return`<div class="inspect-panel">
+    <div class="inspect-panel-title">${spec.name} — Inspect &amp; Measure</div>
+    <div class="sub-comp-list">${tabs}</div>
+    <div>${rows}</div>
+  </div>`;
+}
+
+
+
+function renderJobSection(comp){
+  const jobs=state.jobs.filter(j=>j.component===comp);
+  const s=getCompStats(comp);
+  const col=barColor(s.pct);
+  const key=comp.replace(/\s/g,'_');
+  let html=`<div class="comp-section">
+    <div class="comp-header">
+      <div class="comp-header-name">${comp}</div>
+      <div class="comp-header-bar"><div class="comp-header-bar-fill" style="width:${s.pct}%;background:${col};"></div></div>
+      <div class="comp-header-meta">${s.done}/${s.total} · ${s.pct}%</div>
+    </div>`;
+
+  if(!jobs.length){
+    html+=`<div style="font-size:11px;color:var(--text3);padding:4px 0;font-family:var(--mono);">No jobs yet</div>`;
+  } else {
+    jobs.forEach(j=>{
+      const isDone=j.status==='done';
+      const wLabel={minor:'Minor',medium:'Medium',major:'Major',huge:'Huge'}[j.weight]||'';
+      const wCls={minor:'weight-minor',medium:'weight-medium',major:'weight-major',huge:'weight-huge'}[j.weight]||'weight-medium';
+      const isInspOpen=activeInspectJob===j.id;
+
+      if(j.isInspect){
+        const prog=getInspectProgress(j.id);
+        html+=`<div class="job-item inspect-job">
+          <div class="job-check${isDone?' checked':prog.partial?' partial':''}" style="cursor:default;opacity:0.5;"></div>
+          <div class="job-body">
+            <div class="job-title${isDone?' done':''}">${j.name}
+              <span class="weight-badge ${wCls}">${wLabel}</span>
+              ${prog.total?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-left:5px;">${prog.filled}/${prog.total} sections done</span>`:''}
+            </div>
+            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px;">${isDone?'✓ All measurements complete':'Tick completes automatically when all measurements are entered'}</div>
+          </div>
+          <div class="job-actions">
+            <button class="expand-btn" onclick="goToInspectMeasure()">→ Measure</button>
+            <button class="btn btn-danger btn-sm" onclick="delJob('${j.id}')">✕</button>
+          </div>
+        </div>`;
+
+      } else {
+        const noteVisible=j.note?'visible':'';
+        html+=`<div class="job-item">
+          <div class="job-check${isDone?' checked':''}" onclick="toggleDone('${j.id}')"></div>
+          <div class="job-body">
+            <div class="job-title${isDone?' done':''}">${j.name}<span class="weight-badge ${wCls}">${wLabel}</span></div>
+            <button class="note-toggle" onclick="toggleNote('${j.id}')">${j.note?'📝 '+j.note.substring(0,35)+(j.note.length>35?'...':''):'+ note'}</button>
+            <div class="job-note ${noteVisible}" id="jnote-${j.id}">
+              <textarea class="note-edit" placeholder="Add a note..." onblur="saveNote('${j.id}',this.value)">${j.note||''}</textarea>
+            </div>
+          </div>
+          <div class="job-actions">
+            <button class="btn-ghost btn-sm btn" style="padding:2px 6px;font-size:13px;" onclick="moveJobUp('${j.id}')">↑</button>
+            <button class="btn-ghost btn-sm btn" style="padding:2px 6px;font-size:13px;" onclick="moveJobDown('${j.id}')">↓</button>
+            <button class="btn btn-danger btn-sm" onclick="delJob('${j.id}')">✕</button>
+          </div>
+        </div>`;
+      }
+    });
+  }
+
+  html+=`<div class="add-job-row">
+    <input type="text" id="nj-${key}" placeholder="Add a job..." style="flex:2;min-width:100px;" onkeydown="if(event.key==='Enter')quickAddJob('${comp}')"/>
+    <select id="nw-${key}" style="flex:none;width:auto;font-size:11px;padding:4px 8px;">
+      <option value="minor">Minor</option>
+      <option value="medium" selected>Medium</option>
+      <option value="major">Major</option>
+      <option value="huge">Huge</option>
+    </select>
+    <button class="btn btn-primary btn-sm" onclick="quickAddJob('${comp}')">+ Add</button>
+  </div></div>`;
+  return html;
+}
+
+function renderJobs(){buildPills();const el=document.getElementById('jobs-list');el.innerHTML=jobMode==='all'?COMPONENTS.map(renderJobSection).join(''):renderJobSection(activeComp);}
+function quickAddJob(comp){const k=comp.replace(/\s/g,'_'),el=document.getElementById('nj-'+k),name=el.value.trim();if(!name)return;const w=document.getElementById('nw-'+k);state.jobs.push({id:uid(),name,weight:w?w.value:'medium',status:'todo',component:comp,note:'',isInspect:false,created:today()});el.value='';saveState();renderJobs();renderOverview();}
+function toggleNote(id){const el=document.getElementById('jnote-'+id);if(el){el.classList.toggle('visible');if(el.classList.contains('visible'))el.querySelector('textarea').focus();}}
+function saveNote(id,val){const j=state.jobs.find(x=>x.id===id);if(j){j.note=val.trim();saveState();renderJobs();}}
+
+function toggleDone(id){const j=state.jobs.find(x=>x.id===id);if(j){j.status=j.status==='done'?'todo':'done';saveState();renderJobs();renderOverview();}}
+function delJob(id){state.jobs=state.jobs.filter(x=>x.id!==id);saveState();renderJobs();renderOverview();}
+function moveJobUp(id){
+  const jobs=state.jobs;const i=jobs.findIndex(j=>j.id===id);
+  if(i<=0)return;
+  const comp=jobs[i].component;
+  // find previous job in same component
+  let prev=-1;
+  for(let k=i-1;k>=0;k--){if(jobs[k].component===comp){prev=k;break;}}
+  if(prev<0)return;
+  [jobs[i],jobs[prev]]=[jobs[prev],jobs[i]];
+  saveState();renderJobs();
+}
+function moveJobDown(id){
+  const jobs=state.jobs;const i=jobs.findIndex(j=>j.id===id);
+  if(i<0)return;
+  const comp=jobs[i].component;
+  let next=-1;
+  for(let k=i+1;k<jobs.length;k++){if(jobs[k].component===comp){next=k;break;}}
+  if(next<0)return;
+  [jobs[i],jobs[next]]=[jobs[next],jobs[i]];
+  saveState();renderJobs();
+}
+
+// INSPECTION
+let inspMode='measure';
+let inspComp='Engine';
+let inspSubComp=null;
+
+function switchInspMode(mode){
+  inspMode=mode;
+  document.getElementById('insp-seg-measure').classList.toggle('active',mode==='measure');
+  document.getElementById('insp-seg-findings').classList.toggle('active',mode==='findings');
+  document.getElementById('insp-measure-panel').style.display=mode==='measure'?'block':'none';
+  document.getElementById('insp-findings-panel').style.display=mode==='findings'?'block':'none';
+  if(mode==='measure')renderInspectMeasure();
+  else renderInspection();
+}
+
+function goToInspectMeasure(){
+  // Switch to inspection tab, measurement mode, Engine component
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  document.getElementById('tab-inspection').classList.add('active');
+  document.querySelectorAll('#main-app .tab')[2].classList.add('active');
+  inspMode='measure';
+  inspComp='Engine';
+  document.getElementById('insp-seg-measure').classList.add('active');
+  document.getElementById('insp-seg-findings').classList.remove('active');
+  document.getElementById('insp-measure-panel').style.display='block';
+  document.getElementById('insp-findings-panel').style.display='none';
+  renderInspectMeasure();
+}
+
+
+
+function checkInspectJobComplete(){
+  const allFields = Object.keys(V8_SPECS).flatMap(sc=>
+    V8_SPECS[sc].groups.flatMap(g=>{
+      if(g.boreGroup) return getBoreFields(g.cyl).map(f=>getMeasureKey(sc,f.key));
+      if(g.journals) return g.journals.flatMap(j=>[getMeasureKey(sc,j.keyA),getMeasureKey(sc,j.keyB)]);
+      return g.fields.map(f=>getMeasureKey(sc,f.key));
+    })
+  );
+  const m = state.measurements||{};
+  const allDone = allFields.every(k=>m[k]&&m[k]!=='');
+  const inspJob = state.jobs.find(j=>j.isInspect&&j.component==='Engine');
+  if(inspJob){
+    const wasDone = inspJob.status==='done';
+    inspJob.status = allDone?'done':'todo';
+    if(wasDone!==allDone){saveState();renderJobs();renderOverview();}
+  }
+}
+
+const V8_SPECS = {
+  Head: {
+    title: 'Cylinder Head',
+    groups: [
+      {
+        name: 'Valve Stems',
+        sizeStrip: [
+          {cls:'std', label:'STD inlet: 8.664–8.679mm'},
+          {cls:'std', label:'STD exhaust: 8.651–8.666mm'},
+        ],
+        fields: [
+          {label:'Inlet valve stem',key:'valve_stem_inlet',std:'8.664–8.679mm',lo:8.664,hi:8.679},
+          {label:'Exhaust valve stem',key:'valve_stem_exhaust',std:'8.651–8.666mm',lo:8.651,hi:8.666},
+        ]
+      },
+      {
+        name: 'Valve Installed Height',
+        sizeStrip:[{cls:'oor',label:'Max: 47.63mm'}],
+        fields: [
+          {label:'Installed height (max)',key:'valve_height',std:'≤ 47.63mm',lo:0,hi:47.63,maxType:true},
+        ]
+      }
+    ],
+    specBars: [
+      {label:'Stem clearance — inlet',val:'0.025–0.050mm'},
+      {label:'Stem clearance — exhaust',val:'0.038–0.063mm'},
+      {label:'Max installed height',val:'47.63mm'},
+    ]
+  },
+  Block: {
+    title: 'Cylinder Block',
+    groups: [
+      {name:'Cylinder 1',boreGroup:true,cyl:1},
+      {name:'Cylinder 2',boreGroup:true,cyl:2},
+      {name:'Cylinder 3',boreGroup:true,cyl:3},
+      {name:'Cylinder 4',boreGroup:true,cyl:4},
+      {name:'Cylinder 5',boreGroup:true,cyl:5},
+      {name:'Cylinder 6',boreGroup:true,cyl:6},
+      {name:'Cylinder 7',boreGroup:true,cyl:7},
+      {name:'Cylinder 8',boreGroup:true,cyl:8},
+      {
+        name: 'Piston Clearance',
+        sizeStrip:[{cls:'std',label:'STD: 0.018–0.033mm'}],
+        fields: [
+          {label:'Piston to bore clearance',key:'piston_clearance',std:'0.018–0.033mm',lo:0.018,hi:0.033},
+        ]
+      }
+    ],
+    specBars: [
+      {label:'STD bore',val:'88.895–88.935mm'},
+      {label:'+0.020in O/S',val:'89.400–89.445mm'},
+      {label:'Max taper',val:'0.025mm'},
+      {label:'Max OOR',val:'0.025mm'},
+      {label:'Piston clearance',val:'0.018–0.033mm'},
+    ]
+  },
+  Crank: {
+    title: 'Crankshaft',
+    groups: [
+      {
+        name: 'Main Journals',
+        sizeStrip: [
+          {cls:'std', label:'STD: 58.400–58.413mm'},
+          {cls:'us1', label:'0.010 U/S: 58.146–58.158mm'},
+          {cls:'us2', label:'0.020 U/S: 57.892–57.904mm'},
+          {cls:'oor', label:'Max OOR: 0.040mm'},
+        ],
+        journals: [
+          {name:'Main journal 1', keyA:'main1_A', keyB:'main1_B'},
+          {name:'Main journal 2', keyA:'main2_A', keyB:'main2_B'},
+          {name:'Main journal 3', keyA:'main3_A', keyB:'main3_B'},
+          {name:'Main journal 4', keyA:'main4_A', keyB:'main4_B'},
+          {name:'Main journal 5', keyA:'main5_A', keyB:'main5_B'},
+        ],
+        spec:{lo:58.400,hi:58.413,us1lo:58.146,us1hi:58.158,us2lo:57.892,us2hi:57.904,maxOOR:0.040}
+      },
+      {
+        name: 'Big End Journals',
+        sizeStrip: [
+          {cls:'std', label:'STD: 50.800–50.812mm'},
+          {cls:'us1', label:'0.010 U/S: 50.546–50.559mm'},
+          {cls:'us2', label:'0.020 U/S: 50.292–50.305mm'},
+          {cls:'oor', label:'Max OOR: 0.040mm'},
+        ],
+        journals: [
+          {name:'Big end 1', keyA:'be1_A', keyB:'be1_B'},
+          {name:'Big end 2', keyA:'be2_A', keyB:'be2_B'},
+          {name:'Big end 3', keyA:'be3_A', keyB:'be3_B'},
+          {name:'Big end 4', keyA:'be4_A', keyB:'be4_B'},
+          {name:'Big end 5', keyA:'be5_A', keyB:'be5_B'},
+          {name:'Big end 6', keyA:'be6_A', keyB:'be6_B'},
+          {name:'Big end 7', keyA:'be7_A', keyB:'be7_B'},
+          {name:'Big end 8', keyA:'be8_A', keyB:'be8_B'},
+        ],
+        spec:{lo:50.800,hi:50.812,us1lo:50.546,us1hi:50.559,us2lo:50.292,us2hi:50.305,maxOOR:0.040}
+      }
+    ],
+    specBars: [
+      {label:'Main STD',val:'58.400–58.413mm'},
+      {label:'Main 0.010 U/S',val:'58.146–58.158mm'},
+      {label:'Main 0.020 U/S',val:'57.892–57.904mm'},
+      {label:'Big end STD',val:'50.800–50.812mm'},
+      {label:'Big end 0.010 U/S',val:'50.546–50.559mm'},
+      {label:'Big end 0.020 U/S',val:'50.292–50.305mm'},
+      {label:'Max OOR (all)',val:'0.040mm'},
+    ]
+  },
+  Cam: {
+    title: 'Camshaft',
+    groups: [
+      {
+        name: 'Journal Run-out',
+        sizeStrip:[{cls:'oor',label:'Max: 0.050mm'}],
+        fields: [
+          {label:'Journal 1 run-out',key:'cam_ror1',std:'≤ 0.050mm',lo:0,hi:0.050,maxType:true},
+          {label:'Journal 2 run-out',key:'cam_ror2',std:'≤ 0.050mm',lo:0,hi:0.050,maxType:true},
+          {label:'Journal 3 run-out',key:'cam_ror3',std:'≤ 0.050mm',lo:0,hi:0.050,maxType:true},
+        ]
+      },
+      {
+        name: 'End Float',
+        sizeStrip:[{cls:'std',label:'STD: 0.076–0.228mm'}],
+        fields: [
+          {label:'Cam end float',key:'cam_endfloat',std:'0.076–0.228mm',lo:0.076,hi:0.228},
+        ]
+      }
+    ],
+    specBars: [
+      {label:'Max run-out',val:'0.050mm'},
+      {label:'End float',val:'0.076–0.228mm'},
+    ]
+  }
+};
+
+function classifyV8(val, field){
+  const v = parseFloat(val);
+  if(isNaN(v)||val==='') return '';
+  if(field.maxType) return v <= field.hi ? 'ok' : 'over';
+  if(v >= field.lo && v <= field.hi) return 'ok';
+  if(field.us1lo !== undefined && v >= field.us1lo && v <= field.us1hi) return 'us1';
+  if(field.us2lo !== undefined && v >= field.us2lo && v <= field.us2hi) return 'us2';
+  if(field.os1lo !== undefined && v >= field.os1lo && v <= field.os1hi) return 'us1';
+  return 'over';
+}
+
+function getMeasureKey(sc, fieldKey){ return 'v8_'+sc+'_'+fieldKey; }
+
+function getBoreFields(cyl){
+  const c = cyl;
+  return [
+    {label:'TDC — Thrust',key:`bore${c}_tdc_thrust`,std:'88.895–88.935mm',lo:88.895,hi:88.935,os1lo:89.400,os1hi:89.445},
+    {label:'TDC — Axial',key:`bore${c}_tdc_axial`,std:'88.895–88.935mm',lo:88.895,hi:88.935,os1lo:89.400,os1hi:89.445},
+    {label:'Mid — Thrust',key:`bore${c}_mid_thrust`,std:'88.895–88.935mm',lo:88.895,hi:88.935,os1lo:89.400,os1hi:89.445},
+    {label:'Mid — Axial',key:`bore${c}_mid_axial`,std:'88.895–88.935mm',lo:88.895,hi:88.935,os1lo:89.400,os1hi:89.445},
+    {label:'BDC — Thrust',key:`bore${c}_bdc_thrust`,std:'88.895–88.935mm',lo:88.895,hi:88.935,os1lo:89.400,os1hi:89.445},
+    {label:'BDC — Axial',key:`bore${c}_bdc_axial`,std:'88.895–88.935mm',lo:88.895,hi:88.935,os1lo:89.400,os1hi:89.445},
+  ];
+}
+
+function calcBoreStats(cyl, sc){
+  const kf = (pos,dir) => getMeasureKey(sc, `bore${cyl}_${pos}_${dir}`);
+  const get = k => parseFloat(state.measurements[k])||null;
+  const tT=get(kf('tdc','thrust')), tA=get(kf('tdc','axial'));
+  const mT=get(kf('mid','thrust')), mA=get(kf('mid','axial'));
+  const bT=get(kf('bdc','thrust')), bA=get(kf('bdc','axial'));
+  const taper_thrust = (tT&&bT) ? Math.abs(tT-bT) : null;
+  const taper_axial  = (tA&&bA) ? Math.abs(tA-bA) : null;
+  const oor_tdc = (tT&&tA) ? Math.abs(tT-tA) : null;
+  const oor_mid = (mT&&mA) ? Math.abs(mT-mA) : null;
+  const oor_bdc = (bT&&bA) ? Math.abs(bT-bA) : null;
+  return {taper_thrust, taper_axial, oor_tdc, oor_mid, oor_bdc};
+}
+
+function fmm(v){ return v!==null ? v.toFixed(3)+'mm' : '—'; }
+function calcClass(v, max){ if(v===null)return''; return v<=max?'ok':'over'; }
+
+function getSizeBand(val, field){
+  const v = parseFloat(val);
+  if(isNaN(v)||val==='') return {band:'empty',label:''};
+  if(field.maxType){
+    return v <= field.hi ? {band:'std',label:'Within spec'} : {band:'over',label:'Over spec'};
+  }
+  if(v >= field.lo && v <= field.hi) return {band:'std',label:'STD'};
+  if(field.us1lo !== undefined && v >= field.us1lo && v <= field.us1hi) return {band:'us1',label:'0.010 U/S'};
+  if(field.us2lo !== undefined && v >= field.us2lo && v <= field.us2hi) return {band:'us2',label:'0.020 U/S'};
+  if(field.os1lo !== undefined && v >= field.os1lo && v <= field.os1hi) return {band:'us1',label:'+0.020 O/S'};
+  return {band:'over',label:'Out of spec'};
+}
+
+function renderInspectMeasure(){
+  const scs = Object.keys(V8_SPECS);
+  if(!inspSubComp || !scs.includes(inspSubComp)) inspSubComp = scs[0];
+
+  // Engine label
+  document.getElementById('insp-comp-pills').innerHTML =
+    `<span style="font-size:11px;color:var(--accent);font-family:var(--mono);font-weight:500;">Rover 3.5 V8 — Engine measurements</span>`;
+
+  // Sub-component pills
+  document.getElementById('insp-sub-pills').innerHTML = scs.map(sc => {
+    const allF = V8_SPECS[sc].groups.flatMap(g=>{
+      if(g.boreGroup)return getBoreFields(g.cyl);
+      if(g.journals)return g.journals.flatMap(j=>[{key:j.keyA},{key:j.keyB}]);
+      return g.fields;
+    });
+    const filled = allF.filter(f=>{const k=getMeasureKey(sc,f.key);return state.measurements[k]&&state.measurements[k]!=='';}).length;
+    const done = filled === allF.length;
+    return `<button class="pill${sc===inspSubComp?' active':''}${done?' complete':''}"
+      onclick="selectInspSubComp('${sc}')"
+      style="${done?'border-color:var(--success);color:var(--success);':''}"
+    >${V8_SPECS[sc].title}${done?' ✓':''}</button>`;
+  }).join('');
+
+  const spec = V8_SPECS[inspSubComp];
+  if(!spec){ document.getElementById('insp-measure-fields').innerHTML=''; return; }
+
+  const allFields = spec.groups.flatMap(g=>{
+    if(g.boreGroup)return getBoreFields(g.cyl);
+    if(g.journals)return g.journals.flatMap(j=>[{key:j.keyA,label:j.name+' A'},{key:j.keyB,label:j.name+' B'}]);
+    return g.fields;
+  });
+  const filledCount = allFields.filter(f=>{const k=getMeasureKey(inspSubComp,f.key);return state.measurements[k]&&state.measurements[k]!=='';}).length;
+  const sectionDone = filledCount === allFields.length;
+  const notesKey = 'v8_notes_'+inspSubComp;
+  const notesVal = state.measurements[notesKey]||'';
+
+  let html = `<div class="msheet-section">`;
+
+  // Header
+  html += `<div class="msheet-section-header">
+    <div class="msheet-section-title">${spec.title}</div>
+    <div class="msheet-section-status${sectionDone?' done':''}">
+      ${sectionDone
+        ? '<span class="msheet-complete-badge">✓ All measurements recorded</span>'
+        : `${filledCount} of ${allFields.length} measurements entered`}
+    </div>
+  </div>`;
+
+  // Spec reference box
+  if(spec.specBars && spec.specBars.length){
+    html += `<div class="mspec-box">
+      <div class="mspec-box-title">Reference specifications</div>
+      <div class="mspec-grid">`;
+    spec.specBars.forEach(b=>{
+      html += `<div class="mspec-item ${b.cls||''}">
+        <div class="mspec-item-label">${b.label}</div>
+        <div class="mspec-item-val">${b.val}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Measurement groups
+  spec.groups.forEach(group => {
+    if(group.boreGroup){
+      // 6-measurement bore group
+      const cyl = group.cyl;
+      const fields = getBoreFields(cyl);
+      const allFilled = fields.every(f=>{const k=getMeasureKey(inspSubComp,f.key);return state.measurements[k]&&state.measurements[k]!=='';});
+      const boreSizeStrip = [
+        {cls:'std',label:'STD: 88.895–88.935mm'},
+        {cls:'us1',label:'+0.020 O/S: 89.400–89.445mm'},
+        {cls:'oor',label:'Max taper/OOR: 0.025mm'},
+      ];
+      html += `<div class="mgroup">
+        <div class="mgroup-title">Cylinder ${cyl} <span style="font-size:11px;font-weight:400;color:var(--text3);font-family:var(--mono);">6-point bore measurement</span></div>
+        <div class="mgroup-size-strip">${boreSizeStrip.map(s=>`<span class="mstrip-item ${s.cls}">${s.label}</span>`).join('')}</div>`;
+      fields.forEach(f => {
+        const k = getMeasureKey(inspSubComp, f.key);
+        const val = state.measurements[k]||'';
+        const locked = state.measLocked && state.measLocked[k];
+        const band = getSizeBand(val, f);
+        const inputCls = val ? classifyV8(val,f) : '';
+        const id = 'mf_'+k.replace(/[^a-zA-Z0-9_]/g,'_');
+        html += `<div class="mfield-row">
+          <div class="mfield-label">${f.label}</div>
+          <input class="mfield-input${inputCls?' '+inputCls:''}${locked?' locked':''}"
+            id="${id}" value="${val}" placeholder="0.000"
+            ${locked?'readonly':''}
+            onkeydown="if(event.key==='Enter'){lockField('${k}','${id}');this.blur();event.preventDefault();}"
+            oninput="onV8Input('${k}','${id}',this.value)" onblur="onV8Blur('${k}','${id}')"
+          />
+          <span class="msize-badge ${val?band.band:'empty'}">${val?band.label:'—'}</span>
+          <button class="mlock-btn${locked?' locked':''}" onclick="toggleLock('${k}','${id}')">${locked?'🔒':'🔓'}</button>
+        </div>`;
+      });
+      if(allFilled){
+        const stats = calcBoreStats(cyl, inspSubComp);
+        const mx=0.025;
+        const cc=(v,m)=>v!==null?(v<=m?'ok':'over'):'';
+        html += `<div class="mcalc-section">
+          <div class="mcalc-section-title">Calculated — Cylinder ${cyl}</div>
+          ${[
+            ['Taper — Thrust (TDC–BDC)',stats.taper_thrust,mx],
+            ['Taper — Axial (TDC–BDC)',stats.taper_axial,mx],
+            ['OOR at TDC',stats.oor_tdc,mx],
+            ['OOR at Mid',stats.oor_mid,mx],
+            ['OOR at BDC',stats.oor_bdc,mx],
+          ].map(([lbl,v,m])=>`<div class="mcalc-row">
+            <div class="mcalc-label">${lbl}</div>
+            <div class="mcalc-val ${cc(v,m)}">${v!==null?v.toFixed(3)+'mm':'—'}</div>
+            <span class="mcalc-badge ${cc(v,m)}">${v!==null?(v<=m?'OK':'Over spec'):'—'}</span>
+          </div>`).join('')}
+        </div>`;
+      } else {
+        html += `<div style="font-size:10px;color:var(--text3);font-family:var(--mono);padding:6px 0;">Enter all 6 to see taper &amp; OOR</div>`;
+      }
+      html += `</div>`;
+
+    } else if(group.journals){
+      // Journal group with A/B measurements and inline OOR
+      const spec2 = group.spec;
+      html += `<div class="mgroup">
+        <div class="mgroup-title">${group.name}</div>
+        <div class="mgroup-size-strip">${(group.sizeStrip||[]).map(s=>`<span class="mstrip-item ${s.cls}">${s.label}</span>`).join('')}</div>
+        <div style="display:grid;grid-template-columns:auto 85px 85px 90px 90px 28px;gap:6px;align-items:center;padding:4px 0;border-bottom:1px solid var(--border2);font-size:9px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.04em;">
+          <div>Journal</div><div style="text-align:center;">A (mm)</div><div style="text-align:center;">B (mm)</div><div style="text-align:center;">OOR</div><div style="text-align:center;">Size</div><div></div>
+        </div>`;
+      group.journals.forEach(j => {
+        const kA = getMeasureKey(inspSubComp, j.keyA);
+        const kB = getMeasureKey(inspSubComp, j.keyB);
+        const valA = state.measurements[kA]||'';
+        const valB = state.measurements[kB]||'';
+        const lockedA = state.measLocked&&state.measLocked[kA];
+        const lockedB = state.measLocked&&state.measLocked[kB];
+        const idA = 'mf_'+kA.replace(/[^a-zA-Z0-9_]/g,'_');
+        const idB = 'mf_'+kB.replace(/[^a-zA-Z0-9_]/g,'_');
+        const clsA = valA?classifyV8(valA,{lo:spec2.lo,hi:spec2.hi,us1lo:spec2.us1lo,us1hi:spec2.us1hi,us2lo:spec2.us2lo,us2hi:spec2.us2hi}):'';
+        const clsB = valB?classifyV8(valB,{lo:spec2.lo,hi:spec2.hi,us1lo:spec2.us1lo,us1hi:spec2.us1hi,us2lo:spec2.us2lo,us2hi:spec2.us2hi}):'';
+        // OOR calc
+        const fA=parseFloat(valA), fB=parseFloat(valB);
+        const oor = (!isNaN(fA)&&!isNaN(fB)&&valA&&valB) ? Math.abs(fA-fB) : null;
+        const oorCls = oor!==null?(oor<=spec2.maxOOR?'ok':'over'):'';
+        // Size band — use the larger reading
+        const bandVal = (!isNaN(fA)&&!isNaN(fB)&&valA&&valB) ? Math.max(fA,fB) : (valA?fA:(valB?fB:null));
+        let sizeLbl = '';
+        if(bandVal!==null){
+          const b=getSizeBand(bandVal.toString(),{lo:spec2.lo,hi:spec2.hi,us1lo:spec2.us1lo,us1hi:spec2.us1hi,us2lo:spec2.us2lo,us2hi:spec2.us2hi});
+          sizeLbl=b.label;
+        }
+        html += `<div style="display:grid;grid-template-columns:auto 85px 85px 90px 90px 28px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+          <div style="font-size:12px;">${j.name}</div>
+          <input class="mfield-input${clsA?' '+clsA:''}${lockedA?' locked':''}" id="${idA}" value="${valA}" placeholder="0.000"
+            ${lockedA?'readonly':''}
+            onkeydown="if(event.key==='Enter'){lockField('${kA}','${idA}');this.blur();event.preventDefault();}"
+            oninput="onV8Input('${kA}','${idA}',this.value)" onblur="onV8Blur('${kA}','${idA}')"
+          />
+          <input class="mfield-input${clsB?' '+clsB:''}${lockedB?' locked':''}" id="${idB}" value="${valB}" placeholder="0.000"
+            ${lockedB?'readonly':''}
+            onkeydown="if(event.key==='Enter'){lockField('${kB}','${idB}');this.blur();event.preventDefault();}"
+            oninput="onV8Input('${kB}','${idB}',this.value)" onblur="onV8Blur('${kB}','${idB}')"
+          />
+          <div class="moor-val ${oorCls}" style="text-align:center;font-family:var(--mono);font-size:11px;">${oor!==null?oor.toFixed(3)+'mm':'—'}</div>
+          <span class="msize-badge ${sizeLbl?getSizeBand(bandVal.toString(),{lo:spec2.lo,hi:spec2.hi,us1lo:spec2.us1lo,us1hi:spec2.us1hi,us2lo:spec2.us2lo,us2hi:spec2.us2hi}).band:'empty'}" style="font-size:10px;text-align:center;">${sizeLbl||'—'}</span>
+          <button class="mlock-btn${(lockedA&&lockedB)?' locked':''}" onclick="lockBoth('${kA}','${idA}','${kB}','${idB}')">${(lockedA&&lockedB)?'🔒':'🔓'}</button>
+        </div>`;
+      });
+      html += `</div>`;
+
+    } else {
+      // Standard field group
+      html += `<div class="mgroup">
+        <div class="mgroup-title">${group.name}${group.specRef?`<span style="font-size:10px;font-weight:400;color:var(--text3);font-family:var(--mono);margin-left:8px;">${group.specRef}</span>`:''}</div>
+        ${group.sizeStrip?`<div class="mgroup-size-strip">${group.sizeStrip.map(s=>`<span class="mstrip-item ${s.cls}">${s.label}</span>`).join('')}</div>`:''}`;
+      group.fields.forEach(f => {
+        const k = getMeasureKey(inspSubComp, f.key);
+        const val = state.measurements[k]||'';
+        const locked = state.measLocked && state.measLocked[k];
+        const band = getSizeBand(val, f);
+        const inputCls = val ? classifyV8(val,f) : '';
+        const id = 'mf_'+k.replace(/[^a-zA-Z0-9_]/g,'_');
+        html += `<div class="mfield-row">
+          <div class="mfield-label">${f.label}</div>
+          <input class="mfield-input${inputCls?' '+inputCls:''}${locked?' locked':''}"
+            id="${id}" value="${val}" placeholder="0.000"
+            ${locked?'readonly':''}
+            onkeydown="if(event.key==='Enter'){lockField('${k}','${id}');this.blur();event.preventDefault();}"
+            oninput="onV8Input('${k}','${id}',this.value)" onblur="onV8Blur('${k}','${id}')"
+          />
+          <span class="msize-badge ${val?band.band:'empty'}">${val?band.label:'—'}</span>
+          <button class="mlock-btn${locked?' locked':''}" onclick="toggleLock('${k}','${id}')">${locked?'🔒':'🔓'}</button>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+  });
+  // Notes
+  html += `<div class="msheet-notes">
+    <div class="msheet-notes-label">Condition &amp; finish notes</div>
+    <textarea placeholder="Surface finish, scoring, wear marks, any concerns about this component..."
+      onblur="saveNotes('${notesKey}',this.value)">${notesVal}</textarea>
+  </div>`;
+
+  html += `</div>`;
+  document.getElementById('insp-measure-fields').innerHTML = html;
+}
+
+function findFieldSpec(key){
+  for(const sc of Object.keys(V8_SPECS)){
+    for(const g of V8_SPECS[sc].groups){
+      if(g.fields){const f=g.fields.find(f=>getMeasureKey(sc,f.key)===key);if(f)return f;}
+      if(g.journals){
+        const isJ=g.journals.some(j=>getMeasureKey(sc,j.keyA)===key||getMeasureKey(sc,j.keyB)===key);
+        if(isJ)return{lo:g.spec.lo,hi:g.spec.hi,us1lo:g.spec.us1lo,us1hi:g.spec.us1hi,us2lo:g.spec.us2lo,us2hi:g.spec.us2hi};
+      }
+    }
+  }
+  return null;
+}
+
+function onV8Input(key, domId, value){
+  if(!state.measurements)state.measurements={};
+  state.measurements[key]=value;
+  // Just update this field's styling inline — don't re-render
+  const inp=document.getElementById(domId);
+  const field=findFieldSpec(key);
+  if(field&&inp){
+    const cls=classifyV8(value,field);
+    inp.className='mfield-input'+(cls?' '+cls:'')+(inp.readOnly?' locked':'');
+    // Update adjacent size badge if it exists
+    const row=inp.closest('.mfield-row')||inp.closest('div[style*="grid"]');
+    if(row){
+      const badge=row.querySelector('.msize-badge');
+      if(badge&&value){
+        const band=getSizeBand(value,field);
+        badge.className='msize-badge '+(value?band.band:'empty');
+        badge.textContent=value?band.label:'—';
+      }
+    }
+  }
+  saveState();
+}
+
+function onV8Blur(key, domId){
+  // Lock on blur if a value has been entered
+  if(state.measurements[key]&&state.measurements[key]!==''){
+    if(!state.measLocked)state.measLocked={};
+    state.measLocked[key]=true;
+  }
+  saveState();
+  renderInspectMeasure();
+  checkInspectJobComplete();
+}
+
+function lockBoth(kA,idA,kB,idB){
+  if(!state.measLocked)state.measLocked={};
+  const isLocked=state.measLocked[kA]&&state.measLocked[kB];
+  [kA,kB].forEach(k=>state.measLocked[k]=!isLocked);
+  saveState();
+  renderInspectMeasure();
+}
+function lockField(key, domId){
+  if(!state.measLocked) state.measLocked={};
+  state.measLocked[key]=true;
+  const inp=document.getElementById(domId);
+  if(inp){inp.readOnly=true;inp.classList.add('locked');}
+  const lk=inp?inp.parentElement.querySelector('.mfield-lock'):null;
+  if(lk)lk.textContent='🔒';
+  saveState();
+}
+
+function toggleLock(key, domId){
+  if(!state.measLocked) state.measLocked={};
+  const isLocked = state.measLocked[key];
+  state.measLocked[key] = !isLocked;
+  const inp=document.getElementById(domId);
+  if(inp){inp.readOnly=!isLocked;inp.classList.toggle('locked',!isLocked);}
+  const lk=inp?inp.parentElement.querySelector('.mfield-lock'):null;
+  if(lk)lk.textContent=!isLocked?'🔒':'○';
+  saveState();
+}
+
+function saveNotes(key, val){
+  if(!state.measurements) state.measurements={};
+  state.measurements[key]=val;
+  saveState();
+}
+
+
+function selectInspComp(c){inspComp=c;inspSubComp=null;renderInspectMeasure();}
+function selectInspSubComp(sc){inspSubComp=sc;renderInspectMeasure();}
+
+
+function onInspMeasureInput(subComp,fieldLabel,domId,value){
+  if(!state.measurements)state.measurements={};
+  if(!state.measLocked)state.measLocked={};
+  if(!state.measurements[subComp])state.measurements[subComp]={};
+  state.measurements[subComp][fieldLabel]=value;
+  const spec=getSpec();
+  const field=spec&&spec.subcomps[subComp]?spec.subcomps[subComp].fields.find(f=>f.label===fieldLabel):null;
+  if(field){
+    const cls=classifyMeasure(value,field);
+    const inp=document.getElementById(domId);if(inp)inp.className='measure-input'+(cls?' '+cls:'');
+    const dot=document.getElementById('dot-'+domId);if(dot)dot.className='status-dot'+(cls?' '+cls:'');
+  }
+  saveState();
+  checkInspectJobComplete();
+  renderInspectMeasure();
+}
+
+function openLogModal(jobId,comp){logJobId=jobId;logComp=comp;const j=state.jobs.find(x=>x.id===jobId);document.getElementById('log-title').textContent=`Log finding — ${j?j.name:comp}`;document.getElementById('log-obs').value='';document.getElementById('log-rect').value='';document.getElementById('log-overlay').classList.add('visible');setTimeout(()=>document.getElementById('log-obs').focus(),50);}
+function saveLogFinding(){const obs=document.getElementById('log-obs').value.trim();if(!obs)return;state.inspections.push({id:uid(),comp:logComp,jobId:logJobId,observation:obs,rectification:document.getElementById('log-rect').value.trim(),severity:document.getElementById('log-sev').value,status:'noted',date:today()});document.getElementById('log-overlay').classList.remove('visible');saveState();renderInspection();renderOverview();}
+function setInspFilter(f){inspFilter=f;renderInspection();}
+function updateInspStatus(id,val){const i=state.inspections.find(x=>x.id===id);if(i){i.status=val;saveState();renderInspection();}}
+function delInsp(id){state.inspections=state.inspections.filter(x=>x.id!==id);saveState();renderInspection();renderOverview();}
+function renderInspection(){
+  const c={all:state.inspections.length,urgent:state.inspections.filter(i=>i.severity==='urgent'&&i.status!=='actioned').length,open:state.inspections.filter(i=>i.status!=='actioned').length,actioned:state.inspections.filter(i=>i.status==='actioned').length};
+  document.getElementById('insp-filters').innerHTML=[['all',`All (${c.all})`],['urgent',`Urgent (${c.urgent})`],['open',`Open (${c.open})`],['actioned',`Actioned (${c.actioned})`]].map(([v,l])=>`<button class="filter-btn${inspFilter===v?' active':''}" onclick="setInspFilter('${v}')">${l}</button>`).join('');
+  const filtered=state.inspections.filter(i=>{if(inspFilter==='urgent')return i.severity==='urgent'&&i.status!=='actioned';if(inspFilter==='open')return i.status!=='actioned';if(inspFilter==='actioned')return i.status==='actioned';return true;}).sort((a,b)=>{const s={urgent:0,med:1,noted:2};if(a.status==='actioned'&&b.status!=='actioned')return 1;if(b.status==='actioned'&&a.status!=='actioned')return-1;return(s[a.severity]||2)-(s[b.severity]||2);});
+  const el=document.getElementById('insp-list');
+  if(!filtered.length){el.innerHTML='<div class="empty">No findings yet</div>';return;}
+  const sevBadge=s=>s==='urgent'?'<span class="badge badge-urgent">Urgent</span>':s==='med'?'<span class="badge"style="background:rgba(200,125,58,0.18);color:#d48a50;border:1px solid rgba(200,125,58,0.25);">Needs attention</span>':'<span class="badge badge-noted">Noted</span>';
+  el.innerHTML=filtered.map(i=>{const lj=i.jobId?state.jobs.find(j=>j.id===i.jobId):null;return`<div class="insp-item${i.severity==='urgent'&&i.status!=='actioned'?' urgent':''}${i.status==='actioned'?' actioned':''}"><div style="display:flex;align-items:flex-start;gap:8px;"><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;flex-wrap:wrap;"><span style="font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;font-family:var(--mono);">${i.comp}</span>${sevBadge(i.severity)}${i.status==='actioned'?'<span class="badge badge-actioned">Actioned</span>':''}<span style="font-size:10px;color:var(--text3);margin-left:auto;font-family:var(--mono);">${fmtDate(i.date)}</span></div>${lj?`<div style="font-size:10px;color:var(--text3);margin-bottom:3px;font-family:var(--mono);">↳ ${lj.name}</div>`:''}<div style="font-size:12px;font-weight:500;margin-bottom:${i.rectification?'4px':'0'};">${i.observation}</div>${i.rectification?`<div style="font-size:11px;color:var(--text3);border-top:1px solid var(--border);padding-top:4px;margin-top:4px;font-family:var(--mono);">${i.rectification}</div>`:''}</div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0;"><select class="btn btn-sm"style="padding:3px 6px;font-size:10px;"onchange="updateInspStatus('${i.id}',this.value)"><option value="noted"${i.status==='noted'?' selected':''}>Open</option><option value="actioned"${i.status==='actioned'?' selected':''}>Actioned</option></select><button class="btn btn-danger btn-sm"onclick="delInsp('${i.id}')">✕</button></div></div></div>`;}).join('');
+}
+function logOverlayOpen(){logJobId=null;logComp='General';document.getElementById('log-title').textContent='Log finding';document.getElementById('log-obs').value='';document.getElementById('log-rect').value='';document.getElementById('log-overlay').classList.add('visible');setTimeout(()=>document.getElementById('log-obs').focus(),50);}
+
+
+// ORDERS
+function openQuickCapture(){document.getElementById('quick-overlay').classList.add('visible');setTimeout(()=>document.getElementById('quick-input').focus(),50);}
+function closeOverlay(id,e){if(!e||e.target===document.getElementById(id)){document.getElementById(id).classList.remove('visible');}}
+function saveQuickItem(){const name=document.getElementById('quick-input').value.trim();if(!name)return;const desc=document.getElementById('quick-desc').value.trim();const qty=document.getElementById('quick-qty').value||'1';state.quickList.push({id:uid(),name,desc,qty,created:today()});saveState();renderOrders();document.getElementById('quick-overlay').classList.remove('visible');['quick-input','quick-desc','quick-qty'].forEach(id=>document.getElementById(id).value='');}
+function delQuickItem(id){state.quickList=state.quickList.filter(x=>x.id!==id);saveState();renderOrders();}
+function promoteQuickToOrder(id){const q=state.quickList.find(x=>x.id===id);if(!q)return;openOrderModal(null,q.name,q.desc);state.quickList=state.quickList.filter(x=>x.id!==id);saveState();renderOrders();}
+function openOrderModal(existingId,prefillName,prefillNotes){editingOrderId=existingId;const o=existingId?state.orders.find(x=>x.id===existingId):null;document.getElementById('order-modal-title').textContent=existingId?'Edit order':'Add order';document.getElementById('om-item').value=o?o.item:(prefillName||'');document.getElementById('om-supplier').value=o?o.supplier:'';document.getElementById('om-notes').value=o?o.notes:(prefillNotes||'');document.getElementById('om-cost').value=o?o.cost:'';document.getElementById('om-status').value=o?o.status:'toorder';toggleOrderDate();if(o&&o.date)document.getElementById('om-date').value=o.date;else document.getElementById('om-date').value=today();document.getElementById('order-overlay').classList.add('visible');setTimeout(()=>document.getElementById('om-item').focus(),50);}
+function toggleOrderDate(){const status=document.getElementById('om-status').value;document.getElementById('om-date-wrap').style.display=status==='ordered'||status==='arrived'?'block':'none';}
+function saveOrder(){const item=document.getElementById('om-item').value.trim();if(!item)return;const status=document.getElementById('om-status').value;const date=status==='ordered'||status==='arrived'?document.getElementById('om-date').value:'';if(editingOrderId){const o=state.orders.find(x=>x.id===editingOrderId);if(o){o.item=item;o.supplier=document.getElementById('om-supplier').value.trim();o.notes=document.getElementById('om-notes').value.trim();o.cost=document.getElementById('om-cost').value;o.status=status;o.date=date;}}else{state.orders.push({id:uid(),item,supplier:document.getElementById('om-supplier').value.trim(),notes:document.getElementById('om-notes').value.trim(),cost:document.getElementById('om-cost').value,status,date,created:today()});}saveState();renderOrders();renderOverview();document.getElementById('order-overlay').classList.remove('visible');}
+function moveOrder(id,newStatus){const o=state.orders.find(x=>x.id===id);if(o){o.status=newStatus;if(newStatus==='ordered'&&!o.date)o.date=today();saveState();renderOrders();renderOverview();}}
+function delOrder(id){state.orders=state.orders.filter(x=>x.id!==id);saveState();renderOrders();renderOverview();}
+function renderOrders(){
+  const ql=document.getElementById('quick-list');
+  if(!state.quickList||!state.quickList.length){ql.innerHTML=`<div style="font-size:11px;color:var(--text3);padding:2px 0 6px;font-family:var(--mono);">Nothing yet — tap + to capture</div>`;}
+  else{ql.innerHTML=state.quickList.map(q=>`<div class="quick-item"><div class="quick-item-info"><div class="quick-item-name">${q.name}</div><div class="quick-item-meta">${[q.desc,q.qty&&q.qty!='1'?'Qty: '+q.qty:''].filter(Boolean).join(' · ')}</div></div><button class="btn btn-sm"onclick="promoteQuickToOrder('${q.id}')">→ Order</button><button class="btn btn-danger btn-sm"onclick="delQuickItem('${q.id}')">✕</button></div>`).join('');}
+  const stages=[{key:'toorder',label:'To order'},{key:'ordered',label:'Ordered'},{key:'arrived',label:'Arrived'}];
+  const pip=document.getElementById('order-pipeline');
+  pip.innerHTML=stages.map(st=>{
+    const items=state.orders.filter(o=>o.status===st.key);
+    const itemsHtml=items.length?items.map(o=>{
+      const days=st.key==='ordered'&&o.date?daysSince(o.date):null;
+      let actions='';
+      if(st.key==='toorder')actions=`<button class="btn btn-sm btn-primary"onclick="moveOrder('${o.id}','ordered')">Mark ordered</button>`;
+      if(st.key==='ordered')actions=`<button class="btn btn-sm btn-primary"onclick="moveOrder('${o.id}','arrived')">Mark arrived</button>`;
+      return`<div class="pipeline-item"><div class="pipeline-item-name">${o.item}</div><div class="pipeline-item-meta">${[o.supplier,days!==null?`${days}d ago`:'',o.cost?'£'+o.cost:''].filter(Boolean).join(' · ')}</div>${o.notes?`<div class="pipeline-item-meta">${o.notes}</div>`:''}<div class="pipeline-item-actions">${actions}<button class="btn btn-sm"onclick="openOrderModal('${o.id}')">Edit</button><button class="btn btn-danger btn-sm"onclick="delOrder('${o.id}')">✕</button></div></div>`;
+    }).join(''):`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);padding:4px 0;">Empty</div>`;
+    return`<div class="pipeline-col"><div class="pipeline-col-title">${st.label}<span class="pipeline-col-count">${items.length}</span></div>${itemsHtml}<button class="btn btn-sm"style="width:100%;margin-top:6px;"onclick="openOrderModal(null,'','')">+ Add</button></div>`;
+  }).join('');
+}
+
+// COSTS
+function addCost(){const desc=document.getElementById('cost-desc').value.trim(),amt=document.getElementById('cost-amount').value;if(!desc||!amt)return;state.costs.push({id:uid(),desc,cat:document.getElementById('cost-cat').value,supplier:document.getElementById('cost-supplier').value.trim(),date:document.getElementById('cost-date').value,amount:parseFloat(amt),notes:document.getElementById('cost-notes').value.trim()});['cost-desc','cost-supplier','cost-date','cost-amount','cost-notes'].forEach(id=>document.getElementById(id).value='');saveState();renderCosts();renderOverview();}
+function delCost(id){state.costs=state.costs.filter(x=>x.id!==id);saveState();renderCosts();renderOverview();}
+function renderCosts(){const total=state.costs.reduce((s,c)=>s+(c.amount||0),0),byCat={};state.costs.forEach(c=>{byCat[c.cat]=(byCat[c.cat]||0)+c.amount;});document.getElementById('costs-metrics').innerHTML=`<div class="metric"><div class="metric-label">Total spent</div><div class="metric-value"style="color:var(--accent);font-size:15px;">${fmt(total)}</div></div><div class="metric"><div class="metric-label">Entries</div><div class="metric-value">${state.costs.length}</div></div>${Object.entries(byCat).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,v])=>`<div class="metric"><div class="metric-label">${k}</div><div class="metric-value"style="font-size:13px;">${fmt(v)}</div></div>`).join('')}`;const el=document.getElementById('costs-list');if(!state.costs.length){el.innerHTML='<div class="empty">No costs yet</div>';return;}el.innerHTML=[...state.costs].sort((a,b)=>(b.date||'')>(a.date||'')?1:-1).map(c=>`<div class="item"><div style="display:flex;align-items:flex-start;gap:8px;"><div style="flex:1;"><div class="item-title">${c.desc}</div><div class="item-sub">${[c.cat,c.supplier,c.date?fmtDate(c.date):'',c.notes].filter(Boolean).join(' · ')}</div></div><div style="display:flex;gap:5px;align-items:center;"><span style="font-size:13px;font-weight:500;color:var(--accent);">${fmt(c.amount)}</span><button class="btn btn-danger btn-sm"onclick="delCost('${c.id}')">✕</button></div></div></div>`).join('');}
+
+// AWAY
+function addAway(){const item=document.getElementById('away-item').value.trim();if(!item)return;state.away.push({id:uid(),item,where:document.getElementById('away-where').value.trim(),sent:document.getElementById('away-sent').value,eta:document.getElementById('away-eta').value,notes:document.getElementById('away-notes').value.trim(),returned:false});['away-item','away-where','away-sent','away-eta','away-notes'].forEach(id=>document.getElementById(id).value='');saveState();renderAway();renderOverview();}
+function markReturned(id){const a=state.away.find(x=>x.id===id);if(a){a.returned=!a.returned;saveState();renderAway();renderOverview();}}
+function delAway(id){state.away=state.away.filter(x=>x.id!==id);saveState();renderAway();renderOverview();}
+function renderAway(){const el=document.getElementById('away-list');if(!state.away.length){el.innerHTML='<div class="empty">Nothing away yet</div>';return;}const active=state.away.filter(a=>!a.returned),returned=state.away.filter(a=>a.returned);const ri=a=>`<div class="item${a.returned?' done-item':''}"><div style="display:flex;align-items:flex-start;gap:8px;"><div style="flex:1;"><div class="item-title">${a.item}</div><div class="item-sub">${[a.where,a.sent?'Sent '+fmtDate(a.sent):'',a.eta?`<span style="${overdue(a.eta)&&!a.returned?'color:var(--danger)':''}">Back ${fmtDate(a.eta)}</span>`:'',a.notes].filter(Boolean).join(' · ')}</div></div><div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;">${a.returned?'<span class="badge badge-received">Returned</span>':'<span class="badge badge-away">Away</span>'}<button class="btn btn-sm"onclick="markReturned('${a.id}')">${a.returned?'Undo':'Mark returned'}</button><button class="btn btn-danger btn-sm"onclick="delAway('${a.id}')">✕</button></div></div></div>`;el.innerHTML=active.map(ri).join('')+(returned.length?`<div style="font-size:10px;color:var(--text3);margin:8px 0 5px;font-family:var(--mono);">Returned</div>`+returned.map(ri).join(''):'');}
+
+// QUOTES
+function addQuote(){const desc=document.getElementById('q-desc').value.trim();if(!desc)return;state.quotes.push({id:uid(),desc,supplier:document.getElementById('q-supplier').value.trim(),date:document.getElementById('q-date').value,amount:document.getElementById('q-amount').value,status:document.getElementById('q-status').value,notes:document.getElementById('q-notes').value.trim()});['q-desc','q-supplier','q-date','q-amount','q-notes'].forEach(id=>document.getElementById(id).value='');saveState();renderQuotes();}
+function updateQuoteStatus(id,val){const q=state.quotes.find(x=>x.id===id);if(q){q.status=val;saveState();renderQuotes();}}
+function delQuote(id){state.quotes=state.quotes.filter(x=>x.id!==id);saveState();renderQuotes();}
+function renderQuotes(){const el=document.getElementById('quotes-list');if(!state.quotes.length){el.innerHTML='<div class="empty">No quotes yet</div>';return;}el.innerHTML=state.quotes.map(q=>`<div class="item"><div style="display:flex;align-items:flex-start;gap:8px;"><div style="flex:1;"><div class="item-title">${q.desc}</div><div class="item-sub">${[q.supplier,q.date?fmtDate(q.date):'',q.notes].filter(Boolean).join(' · ')}</div></div><div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;">${q.amount?`<span style="font-size:12px;font-weight:500;color:var(--accent);">£${q.amount}</span>`:''}<select class="btn btn-sm"style="padding:3px 6px;"onchange="updateQuoteStatus('${q.id}',this.value)"><option value="pending"${q.status==='pending'?' selected':''}>Pending</option><option value="accepted"${q.status==='accepted'?' selected':''}>Accepted</option><option value="rejected"${q.status==='rejected'?' selected':''}>Rejected</option></select><button class="btn btn-danger btn-sm"onclick="delQuote('${q.id}')">✕</button></div></div></div>`).join('');}
+
+function render(){renderOverview();renderJobs();renderInspection();renderInspectMeasure();renderOrders();renderCosts();renderAway();renderQuotes();}
+
+// PIN LOCK
+const CORRECT_PIN = '1962';
+let pinEntry = '';
+
+function showPinScreen(onSuccess){
+  const el = document.createElement('div');
+  el.className = 'pin-screen';
+  el.id = 'pin-screen';
+  el.innerHTML = '<div class="pin-title">BEAUMONT MOTOR DIVISION</div>' +
+    '<div class="pin-sub">Enter PIN to continue</div>' +
+    '<div class="pin-dots" id="pin-dots">' +
+      '<div class="pin-dot" id="pd0"></div>' +
+      '<div class="pin-dot" id="pd1"></div>' +
+      '<div class="pin-dot" id="pd2"></div>' +
+      '<div class="pin-dot" id="pd3"></div>' +
+    '</div>' +
+    '<div class="pin-error" id="pin-error"></div>' +
+    '<div class="pin-keypad">' +
+      '<button class="pin-key" onclick="pinPress('1')">1</button>' +
+      '<button class="pin-key" onclick="pinPress('2')">2</button>' +
+      '<button class="pin-key" onclick="pinPress('3')">3</button>' +
+      '<button class="pin-key" onclick="pinPress('4')">4</button>' +
+      '<button class="pin-key" onclick="pinPress('5')">5</button>' +
+      '<button class="pin-key" onclick="pinPress('6')">6</button>' +
+      '<button class="pin-key" onclick="pinPress('7')">7</button>' +
+      '<button class="pin-key" onclick="pinPress('8')">8</button>' +
+      '<button class="pin-key" onclick="pinPress('9')">9</button>' +
+      '<button class="pin-key" onclick="pinBack()">⌫</button>' +
+      '<button class="pin-key" onclick="pinPress('0')">0</button>' +
+      '<button class="pin-key" style="background:var(--accent);color:#0f0f0d;" onclick="pinSubmit()">✓</button>' +
+    '</div>';
+  document.body.appendChild(el);
+  window._pinSuccess = onSuccess;
+}
+
+function pinPress(d){
+  if(pinEntry.length >= CORRECT_PIN.length) return;
+  pinEntry += d;
+  for(let i=0;i<4;i++){
+    const dot = document.getElementById('pd'+i);
+    if(dot) dot.className = 'pin-dot' + (i < pinEntry.length ? ' filled' : '');
+  }
+  if(pinEntry.length === CORRECT_PIN.length) pinSubmit();
+}
+
+function pinBack(){
+  pinEntry = pinEntry.slice(0,-1);
+  for(let i=0;i<4;i++){
+    const dot = document.getElementById('pd'+i);
+    if(dot) dot.className = 'pin-dot' + (i < pinEntry.length ? ' filled' : '');
+  }
+}
+
+function pinSubmit(){
+  if(pinEntry === CORRECT_PIN){
+    sessionStorage.setItem('bmd_pin_ok','1');
+    const el = document.getElementById('pin-screen');
+    if(el) el.remove();
+    if(window._pinSuccess) window._pinSuccess();
+  } else {
+    const dots = document.getElementById('pin-dots');
+    if(dots){ dots.classList.add('pin-shake'); setTimeout(()=>dots.classList.remove('pin-shake'),300); }
+    const err = document.getElementById('pin-error');
+    if(err) err.textContent = 'Incorrect PIN';
+    pinEntry = '';
+    for(let i=0;i<4;i++){const d=document.getElementById('pd'+i);if(d)d.className='pin-dot';}
+    setTimeout(()=>{const e=document.getElementById('pin-error');if(e)e.textContent='';},1500);
+  }
+}
+
+// INIT
+function startApp(){
+  if(!state.vehicle||!state.vehicle.make){
+    initWizard();
+  } else {
+    if(state.jobs.length===0){
+      const d=today();
+      DEFAULT_JOBS.forEach(j=>{state.jobs.push({id:uid(),name:j.name,weight:j.weight||'medium',status:'todo',component:j.component,note:'',isInspect:j.isInspect||false,created:d});});
+      saveState();
+    }
+    document.getElementById('main-app').style.display='block';
+    updateHeaderBuildName();
+    render();
+  }
+}
+
+function initWithPin(){
+// Show a loading screen while we check Firestore
+document.body.insertAdjacentHTML('afterbegin','<div id="cloud-loading" style="position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;"><div style="font-family:var(--mono);font-size:14px;color:var(--accent);letter-spacing:0.06em;">BEAUMONT MOTOR DIVISION</div><div style="font-family:var(--mono);font-size:11px;color:var(--text3);">Connecting to cloud...</div></div>');
+
+// Load from localStorage first as fallback
+loadState();
+
+// Try to load from Firestore with a timeout
+function tryCloudLoad(){
+  if(!window._firebaseReady || !window._stateDoc){
+    // Firebase not ready yet — retry
+    setTimeout(tryCloudLoad, 100);
+    return;
+  }
+  window._stateDoc.get().then(snap=>{
+    if(snap.exists){
+      const data = snap.data();
+      if(data && data.vehicle && data.vehicle.make){
+        state = {...state, ...data};
+        try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
+      }
+    }
+    const cl=document.getElementById('cloud-loading');if(cl)cl.remove();
+    startApp();
+  }).catch(e=>{
+    console.warn('Could not load from cloud, using local data:', e);
+    const cl=document.getElementById('cloud-loading');if(cl)cl.remove();
+    startApp();
+  });
+}
+
+// Give Firebase module 3 seconds max to connect
+const cloudTimeout = setTimeout(()=>{
+  const el=document.getElementById('cloud-loading');
+  if(el)el.remove();
+  startApp();
+}, 3000);
+
+// Update loading message and start cloud check
+setTimeout(()=>{
+  clearTimeout(cloudTimeout);
+  tryCloudLoad();
+}, 200);
+} // end initWithPin
+
+if(sessionStorage.getItem('bmd_pin_ok')==='1'){
+  initWithPin();
+} else {
+  showPinScreen(initWithPin);
+}
+</script>
+</body>
+</html>
