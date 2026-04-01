@@ -308,37 +308,45 @@ textarea{min-height:52px;resize:vertical;}
 @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
 .pin-shake{animation:shake 0.3s ease;}
 </style>
-  <!-- Firebase via CDN compat -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase loads async after app starts -->
   <script>
-    (function(){
-      try {
-        const firebaseConfig = {
-          apiKey: "AIzaSyDK-JGHRLEhnfLHVrK6bv1ukRG4Na4MdMw",
-          authDomain: "beaumont-motor-division.firebaseapp.com",
-          projectId: "beaumont-motor-division",
-          storageBucket: "beaumont-motor-division.firebasestorage.app",
-          messagingSenderId: "753808178222",
-          appId: "1:753808178222:web:049072b5b95cb44254f3bf"
+    window._firebaseReady = false;
+    window._stateDoc = null;
+    function initFirebase(){
+      try{
+        const s1=document.createElement('script');
+        s1.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';
+        s1.onload=function(){
+          const s2=document.createElement('script');
+          s2.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js';
+          s2.onload=function(){
+            try{
+              const cfg={apiKey:"AIzaSyDK-JGHRLEhnfLHVrK6bv1ukRG4Na4MdMw",authDomain:"beaumont-motor-division.firebaseapp.com",projectId:"beaumont-motor-division",storageBucket:"beaumont-motor-division.firebasestorage.app",messagingSenderId:"753808178222",appId:"1:753808178222:web:049072b5b95cb44254f3bf"};
+              const app=firebase.initializeApp(cfg);
+              const db=firebase.firestore(app);
+              window._stateDoc=db.collection('builds').doc('main');
+              window._firebaseReady=true;
+              const si=document.getElementById('sync-indicator');if(si)si.textContent='☁';
+              // Start real-time listener
+              window._stateDoc.onSnapshot(snap=>{
+                if(snap.exists){
+                  const data=snap.data();
+                  if(window._lastSaveTime&&Date.now()-window._lastSaveTime<2000)return;
+                  if(typeof window.loadFromCloud==='function')window.loadFromCloud(data);
+                }
+              },err=>console.warn('Listener:',err));
+              console.log('Firebase ready');
+            }catch(e){console.warn('Firebase setup failed:',e);}
+          };
+          s2.onerror=function(){console.warn('Firestore CDN failed');};
+          document.head.appendChild(s2);
         };
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
-        window._stateDoc = db.collection('builds').doc('main');
-        window._firebaseReady = true;
-        window._stateDoc.onSnapshot(snap => {
-          if(snap.exists){
-            const data = snap.data();
-            if(window._lastSaveTime && Date.now() - window._lastSaveTime < 2000) return;
-            if(typeof window.loadFromCloud === 'function') window.loadFromCloud(data);
-          }
-        }, err => console.warn('Firestore listener error:', err));
-        console.log('Firebase connected');
-      } catch(e) {
-        console.warn('Firebase init failed — running offline:', e);
-        window._firebaseReady = false;
-      }
-    })();
+        s1.onerror=function(){console.warn('Firebase app CDN failed');};
+        document.head.appendChild(s1);
+      }catch(e){console.warn('Firebase init error:',e);}
+    }
+    // Load Firebase after page is ready — non-blocking
+    window.addEventListener('load', function(){ setTimeout(initFirebase, 500); });
   </script>
 </head>
 <body>
@@ -1617,48 +1625,9 @@ function startApp(){
 }
 
 function initWithPin(){
-// Show a loading screen while we check Firestore
-document.body.insertAdjacentHTML('afterbegin','<div id="cloud-loading" style="position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;"><div style="font-family:var(--mono);font-size:14px;color:var(--accent);letter-spacing:0.06em;">BEAUMONT MOTOR DIVISION</div><div style="font-family:var(--mono);font-size:11px;color:var(--text3);">Connecting to cloud...</div></div>');
-
-// Load from localStorage first as fallback
-loadState();
-
-// Try to load from Firestore with a timeout
-function tryCloudLoad(){
-  if(!window._firebaseReady || !window._stateDoc){
-    // Firebase not ready yet — retry
-    setTimeout(tryCloudLoad, 100);
-    return;
-  }
-  window._stateDoc.get().then(snap=>{
-    if(snap.exists){
-      const data = snap.data();
-      if(data && data.vehicle && data.vehicle.make){
-        state = {...state, ...data};
-        try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
-      }
-    }
-    const cl=document.getElementById('cloud-loading');if(cl)cl.remove();
-    startApp();
-  }).catch(e=>{
-    console.warn('Could not load from cloud, using local data:', e);
-    const cl=document.getElementById('cloud-loading');if(cl)cl.remove();
-    startApp();
-  });
-}
-
-// Give Firebase module 3 seconds max to connect
-const cloudTimeout = setTimeout(()=>{
-  const el=document.getElementById('cloud-loading');
-  if(el)el.remove();
+  // Load from localStorage and start immediately — Firebase syncs in background
+  loadState();
   startApp();
-}, 3000);
-
-// Update loading message and start cloud check
-setTimeout(()=>{
-  clearTimeout(cloudTimeout);
-  tryCloudLoad();
-}, 200);
 } // end initWithPin
 
 if(sessionStorage.getItem('bmd_pin_ok')==='1'){
