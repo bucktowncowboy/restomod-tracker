@@ -1556,24 +1556,24 @@ function showPinScreen(onSuccess){
     '</div>' +
     '<div class="pin-error" id="pin-error"></div>' +
     '<div class="pin-keypad">' +
-      '<button class="pin-key" onclick="pinPress('1')">1</button>' +
-      '<button class="pin-key" onclick="pinPress('2')">2</button>' +
-      '<button class="pin-key" onclick="pinPress('3')">3</button>' +
-      '<button class="pin-key" onclick="pinPress('4')">4</button>' +
-      '<button class="pin-key" onclick="pinPress('5')">5</button>' +
-      '<button class="pin-key" onclick="pinPress('6')">6</button>' +
-      '<button class="pin-key" onclick="pinPress('7')">7</button>' +
-      '<button class="pin-key" onclick="pinPress('8')">8</button>' +
-      '<button class="pin-key" onclick="pinPress('9')">9</button>' +
+      '<button class="pin-key" onclick="pinPress(1)">1</button>' +
+      '<button class="pin-key" onclick="pinPress(2)">2</button>' +
+      '<button class="pin-key" onclick="pinPress(3)">3</button>' +
+      '<button class="pin-key" onclick="pinPress(4)">4</button>' +
+      '<button class="pin-key" onclick="pinPress(5)">5</button>' +
+      '<button class="pin-key" onclick="pinPress(6)">6</button>' +
+      '<button class="pin-key" onclick="pinPress(7)">7</button>' +
+      '<button class="pin-key" onclick="pinPress(8)">8</button>' +
+      '<button class="pin-key" onclick="pinPress(9)">9</button>' +
       '<button class="pin-key" onclick="pinBack()">⌫</button>' +
-      '<button class="pin-key" onclick="pinPress('0')">0</button>' +
+      '<button class="pin-key" onclick="pinPress(0)">0</button>' +
       '<button class="pin-key" style="background:var(--accent);color:#0f0f0d;" onclick="pinSubmit()">✓</button>' +
     '</div>';
   document.body.appendChild(el);
   window._pinSuccess = onSuccess;
 }
 
-function pinPress(d){
+function pinPress(d){d=String(d);
   if(pinEntry.length >= CORRECT_PIN.length) return;
   pinEntry += d;
   for(let i=0;i<4;i++){
